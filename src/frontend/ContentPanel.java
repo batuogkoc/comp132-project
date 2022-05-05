@@ -41,6 +41,5 @@ public class ContentPanel extends JPanel{
 //		catch(Exception e){
 //
 //		}
-		setBackground(Color.blue);
 	}
 }

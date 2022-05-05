@@ -16,8 +16,16 @@ public class SwingTest {
 		batu.addContent(new Content(batu, "Second content", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "cat.png"));
 		
 		MyFrame f = new MyFrame();
-		
-		f.add(new ContentsPanel(batu.getContents()));
+		ContentsPanel cp = new ContentsPanel(batu.getContents());
+		JScrollPane sp = new JScrollPane(cp);
+		sp.setBackground(Color.green);
+//		sp.addComponentListener(new ComponentAdapter() {
+//			public void componentResized(ComponentEvent ce) {
+//				System.out.println(sp.getWidth() + " "+ sp.getHeight());
+//				cp.setPreferredSize(new Dimension(sp.getWidth(), cp.getHeight()));
+//			}
+//		});
+		f.add(sp);
 		
 		
 	}
