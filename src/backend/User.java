@@ -63,6 +63,15 @@ public class User implements Comparable<User>{
 		}
 	}
 	
+	public static boolean authenticateUser(String nickname, String password) {
+		if(users.containsKey(nickname)) {
+			if(users.get(nickname).getPassword().equals(password)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public boolean joinGroup(Group group) {
 		return this.joinedGroups.add(group);
 
@@ -86,6 +95,7 @@ public class User implements Comparable<User>{
 	public boolean removeHobby(String hobby) {
 		return this.hobbies.remove(hobby);
 	}
+	
 	public String getPassword() {
 		return password;
 	}

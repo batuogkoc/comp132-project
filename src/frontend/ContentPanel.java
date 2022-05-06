@@ -1,6 +1,5 @@
 package frontend;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.*;
 
@@ -25,7 +24,7 @@ public class ContentPanel extends JPanel{
 		add(text);
 		text.setAlignmentX(LEFT_ALIGNMENT);
 		
-//		try {
+		try {
 			ImageIcon image = new ImageIcon(getClass().getResource(content.getImagePath()));
 			float aspectRatio = image.getIconWidth()/image.getIconHeight();
 			JLabel imageLabel = new JLabel(new ImageIcon(image.getImage().getScaledInstance(300, 300, Image.SCALE_DEFAULT)));
@@ -36,10 +35,8 @@ public class ContentPanel extends JPanel{
 					imageLabel.setIcon(new ImageIcon(image.getImage().getScaledInstance(getWidth(), (int)((float)getWidth()/aspectRatio), Image.SCALE_DEFAULT)));
 				}
 			});
-			System.out.println("Image found");
-//		}
-//		catch(Exception e){
-//
-//		}
+		}
+		catch(Exception e){
+		}
 	}
 }

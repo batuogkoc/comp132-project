@@ -1,5 +1,6 @@
 package test;
 import backend.*;
+import frontend.*;
 import frontend.ContentPanel;
 import frontend.ContentsPanel;
 
@@ -16,17 +17,14 @@ public class SwingTest {
 		batu.addContent(new Content(batu, "Second content", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "cat.png"));
 		
 		MyFrame f = new MyFrame();
-		ContentsPanel cp = new ContentsPanel(batu.getContents());
-		JScrollPane sp = new JScrollPane(cp);
-		sp.setBackground(Color.green);
-//		sp.addComponentListener(new ComponentAdapter() {
-//			public void componentResized(ComponentEvent ce) {
-//				System.out.println(sp.getWidth() + " "+ sp.getHeight());
-//				cp.setPreferredSize(new Dimension(sp.getWidth(), cp.getHeight()));
-//			}
-//		});
-		f.add(sp);
-		
+//		ContentsPanel cp = new ContentsPanel(batu.getContents());
+//		JScrollPane sp = new JScrollPane(cp);
+//		f.add(sp);
+		Login loginView = new Login();
+		loginView.getLoginButton().addActionListener(ae->{
+			System.out.println(User.authenticateUser(loginView.getEnteredNickname(), loginView.getEnteredPassword()));
+		});
+		f.add(loginView);
 		
 	}
 }

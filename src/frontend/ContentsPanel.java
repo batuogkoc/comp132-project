@@ -28,7 +28,7 @@ public class ContentsPanel extends JPanel implements Scrollable{
 			add(contentPanel, gbc);
 			i++;
 		}
-		setBackground(Color.red);
+//		https://stackoverflow.com/questions/2716274/jscrollpane-needs-to-shrink-its-width
 	}
 
 	@Override
