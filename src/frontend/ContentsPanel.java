@@ -5,14 +5,22 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.util.Collection;
 
-import javax.swing.JPanel;
 import javax.swing.*;
 
-public class ContentsPanel extends JPanel implements Scrollable{
+public class ContentsPanel extends JPanel{
 	public ContentsPanel(Collection<? extends Content> contents) {
+		setLayout(new GridLayout(1,1));
+		add(new JScrollPane(new __ContentsPanel(contents)));
+	}
+}
+
+
+class __ContentsPanel extends JPanel implements Scrollable{
+	public __ContentsPanel(Collection<? extends Content> contents) {
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		int i = 0;

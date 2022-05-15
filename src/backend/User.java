@@ -63,15 +63,22 @@ public class User implements Comparable<User>{
 		}
 	}
 	
-	public static boolean authenticateUser(String nickname, String password) {
+	public static User authenticateUser(String nickname, String password) {
 		if(users.containsKey(nickname)) {
 			if(users.get(nickname).getPassword().equals(password)) {
-				return true;
+				return users.get(nickname);
 			}
 		}
-		return false;
+		return null;
 	}
 	
+	
+	
+	@Override
+	public String toString() {
+		return "Name: " + name + " " + surname + " Email: " + emailAddress;
+	}
+
 	public boolean joinGroup(Group group) {
 		return this.joinedGroups.add(group);
 

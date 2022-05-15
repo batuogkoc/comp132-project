@@ -37,6 +37,7 @@ public class ContentPanel extends JPanel{
 			});
 		}
 		catch(Exception e){
+			System.out.println(e);
 		}
 	}
 }
