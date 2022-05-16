@@ -25,7 +25,7 @@ public class ContentPanel extends JPanel{
 		text.setAlignmentX(LEFT_ALIGNMENT);
 		
 		try {
-			ImageIcon image = new ImageIcon(getClass().getResource(content.getImagePath()));
+			ImageIcon image = new ImageIcon(content.getImagePath());
 			float aspectRatio = image.getIconWidth()/image.getIconHeight();
 			JLabel imageLabel = new JLabel(new ImageIcon(image.getImage().getScaledInstance(300, 300, Image.SCALE_DEFAULT)));
 			add(imageLabel);

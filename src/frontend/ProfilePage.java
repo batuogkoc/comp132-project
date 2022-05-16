@@ -13,21 +13,26 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.CardLayout;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 
 import backend.*;
 import mvc.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ProfilePage extends JPanel {
-	private JTextField textField_6;
-	private JTextField textField_7;
+	private JTextField nameField;
+	private JTextField surnameField;
+	private JTextField nicknameField;
+	private JPanel dynamicPanel;
 
 	/**
 	 * Create the panel.
 	 */
 	public ProfilePage(User viewingUser, User viewedUser) {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] {2, 4};
-		gridBagLayout.rowHeights = new int[] {15, 15, 30};
+		gridBagLayout.columnWidths = new int[] {80, 160};
+		gridBagLayout.rowHeights = new int[] {75, 100, 250};
 		gridBagLayout.columnWeights = new double[]{1.0, 1.0};
 		gridBagLayout.rowWeights = new double[]{1.0, 1.0, 1.0};
 		setLayout(gridBagLayout);
@@ -40,7 +45,6 @@ public class ProfilePage extends JPanel {
 		gbc_imagePanel.gridy = 0;
 		add(imagePanel, gbc_imagePanel);
 		imagePanel.setLayout(new GridLayout(1, 1));
-		imagePanel.add(new ResizableImage(new ImageIcon(viewedUser.getProfilePicturePath())));
 		
 		JPanel infoPanel = new JPanel();
 		GridBagConstraints gbc_infoPanel = new GridBagConstraints();
@@ -63,15 +67,16 @@ public class ProfilePage extends JPanel {
 		gbc_lblName.gridy = 0;
 		infoPanel.add(lblName, gbc_lblName);
 		
-		textField_6 = new JTextField();
-		textField_6.setText("nameField");
-		textField_6.setColumns(10);
-		GridBagConstraints gbc_textField_6 = new GridBagConstraints();
-		gbc_textField_6.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_6.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_6.gridx = 1;
-		gbc_textField_6.gridy = 0;
-		infoPanel.add(textField_6, gbc_textField_6);
+		nameField = new JTextField();
+		nameField.setEditable(false);
+		nameField.setText("nameField");
+		nameField.setColumns(10);
+		GridBagConstraints gbc_nameField = new GridBagConstraints();
+		gbc_nameField.insets = new Insets(0, 0, 5, 0);
+		gbc_nameField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_nameField.gridx = 1;
+		gbc_nameField.gridy = 0;
+		infoPanel.add(nameField, gbc_nameField);
 		
 		JLabel lblSurname = new JLabel("Surname:");
 		GridBagConstraints gbc_lblSurname = new GridBagConstraints();
@@ -80,44 +85,50 @@ public class ProfilePage extends JPanel {
 		gbc_lblSurname.gridy = 1;
 		infoPanel.add(lblSurname, gbc_lblSurname);
 		
-		textField_7 = new JTextField();
-		textField_7.setText("surnameField");
-		textField_7.setColumns(10);
-		GridBagConstraints gbc_textField_7 = new GridBagConstraints();
-		gbc_textField_7.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_7.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_7.gridx = 1;
-		gbc_textField_7.gridy = 1;
-		infoPanel.add(textField_7, gbc_textField_7);
+		surnameField = new JTextField();
+		surnameField.setEditable(false);
+		surnameField.setText("surnameField");
+		surnameField.setColumns(10);
+		GridBagConstraints gbc_surnameField = new GridBagConstraints();
+		gbc_surnameField.insets = new Insets(0, 0, 5, 0);
+		gbc_surnameField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_surnameField.gridx = 1;
+		gbc_surnameField.gridy = 1;
+		infoPanel.add(surnameField, gbc_surnameField);
 		
 		JLabel lblNickname = new JLabel("Nickname:");
 		GridBagConstraints gbc_lblNickname = new GridBagConstraints();
+		gbc_lblNickname.anchor = GridBagConstraints.EAST;
 		gbc_lblNickname.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNickname.gridx = 0;
 		gbc_lblNickname.gridy = 2;
 		infoPanel.add(lblNickname, gbc_lblNickname);
 		
-		JLabel lblNicknamefield = new JLabel("nicknameField");
-		GridBagConstraints gbc_lblNicknamefield = new GridBagConstraints();
-		gbc_lblNicknamefield.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNicknamefield.gridx = 1;
-		gbc_lblNicknamefield.gridy = 2;
-		infoPanel.add(lblNicknamefield, gbc_lblNicknamefield);
+		nicknameField = new JTextField();
+		nicknameField.setEditable(false);
+		nicknameField.setText("nicknameField");
+		GridBagConstraints gbc_nicknameField = new GridBagConstraints();
+		gbc_nicknameField.insets = new Insets(0, 0, 5, 0);
+		gbc_nicknameField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_nicknameField.gridx = 1;
+		gbc_nicknameField.gridy = 2;
+		infoPanel.add(nicknameField, gbc_nicknameField);
+		nicknameField.setColumns(10);
 		
 		JLabel lblAccount = new JLabel("Account:");
 		GridBagConstraints gbc_lblAccount = new GridBagConstraints();
 		gbc_lblAccount.anchor = GridBagConstraints.EAST;
-		gbc_lblAccount.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAccount.insets = new Insets(0, 0, 0, 5);
 		gbc_lblAccount.gridx = 0;
 		gbc_lblAccount.gridy = 3;
 		infoPanel.add(lblAccount, gbc_lblAccount);
 		
-		JComboBox comboBox = new JComboBox();
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
-		gbc_comboBox.gridx = 1;
-		gbc_comboBox.gridy = 3;
-		infoPanel.add(comboBox, gbc_comboBox);
+		String[] accountTypes = {"Regular", "Premium"};
+		JComboBox accountTypeCombo = new JComboBox(accountTypes);
+		GridBagConstraints gbc_accountTypeCombo = new GridBagConstraints();
+		gbc_accountTypeCombo.gridx = 1;
+		gbc_accountTypeCombo.gridy = 3;
+		infoPanel.add(accountTypeCombo, gbc_accountTypeCombo);
 		
 		JPanel controlPanel = new JPanel();
 		GridBagConstraints gbc_controlPanel = new GridBagConstraints();
@@ -253,15 +264,75 @@ public class ProfilePage extends JPanel {
 		gbc_btnFollow.gridy = 1;
 		unfollowedProfile.add(btnFollow, gbc_btnFollow);
 		
-		JPanel dynamicPanel = new JPanel();
+		dynamicPanel = new JPanel();
 		GridBagConstraints gbc_dynamicPanel = new GridBagConstraints();
+		gbc_dynamicPanel.gridheight = 2;
 		gbc_dynamicPanel.gridwidth = 2;
 		gbc_dynamicPanel.fill = GridBagConstraints.BOTH;
 		gbc_dynamicPanel.gridx = 0;
 		gbc_dynamicPanel.gridy = 2;
 		add(dynamicPanel, gbc_dynamicPanel);
+		dynamicPanel.setLayout(new GridLayout(1, 1));
 		
+		imagePanel.add(new ResizableImage(new ImageIcon(viewedUser.getProfilePicturePath())));
+		nameField.setText(viewedUser.getName());
+		surnameField.setText(viewedUser.getSurname());
+		nicknameField.setText(viewedUser.getNickname());
+		accountTypeCombo.setSelectedIndex(viewedUser.isPremium()?1:0);
+			
 		
+		if(viewingUser == viewedUser) {
+			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26374192294213");
+			setDynamicPanelContents(new ContentsPanel(viewedUser.getContents()));
+		}
+		else if (viewingUser.getFollowedUsers().contains(viewedUser)) {
+			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26455931790925");
+		}
+		else {
+			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26836584180790");
+		}
+		
+		btnContents.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setDynamicPanelContents(new ContentsPanel(viewedUser.getContents()));
+			}
+		});
+		btnGroups.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setDynamicPanelContents(new JPanel());
+			}
+		});
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(btnEdit.getText().equals("Edit")) {
+					btnEdit.setText("Done");
+					nameField.setEditable(true);
+					surnameField.setEditable(true);
+					accountTypeCombo.setEditable(true);
+				}
+				else{
+					btnEdit.setText("Edit");
+					viewedUser.setName(nameField.getText());
+					viewedUser.setSurname(surnameField.getText());
+					viewedUser.setPremium(accountTypeCombo.getSelectedIndex()==0?false:true);
+
+					nameField.setEditable(false);
+					surnameField.setEditable(false);
+					accountTypeCombo.setEditable(false);
+					nameField.setText(viewedUser.getName());
+					surnameField.setText(viewedUser.getSurname());
+					accountTypeCombo.setSelectedIndex(viewedUser.isPremium()?1:0);
+					System.out.println(viewedUser);
+				}
+			}
+		});
+	}
+	
+	private void setDynamicPanelContents(JComponent component) {
+		dynamicPanel.removeAll();
+		dynamicPanel.add(component);
+		dynamicPanel.validate();
+		dynamicPanel.repaint();
 	}
 
 }

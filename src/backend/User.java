@@ -13,6 +13,7 @@ public class User implements Comparable<User>{
 	private String emailAddress;
 	private String profilePicturePath;
 	private static String defaultProfilePicturePath;
+	private boolean isPremium;
 	private TreeSet<String> hobbies = new TreeSet<String>();
 	private TreeSet<User> followedUsers = new TreeSet<User>();
 	private TreeSet<Group> joinedGroups = new TreeSet<Group>();
@@ -21,7 +22,7 @@ public class User implements Comparable<User>{
 	
 	
 	
-	public User(String nickname, String password, String name, String surname, int age, String emailAddress) throws IllegalArgumentException{
+	public User(String nickname, String password, String name, String surname, int age, String emailAddress, boolean isPremium) throws IllegalArgumentException{
 		super();
 		if ( users.containsKey(nickname)){
 			throw new IllegalArgumentException("Nickname must be unique");
@@ -32,9 +33,10 @@ public class User implements Comparable<User>{
 		this.surname = surname;
 		this.age = age;
 		this.emailAddress = emailAddress;
+		this.isPremium = isPremium;
 		users.put(nickname, this);
 	}
-	
+
 	protected void finalize() {
 		users.remove(this.nickname);
 	}
@@ -79,6 +81,7 @@ public class User implements Comparable<User>{
 		return "Name: " + name + " " + surname + " Email: " + emailAddress;
 	}
 
+	
 	public boolean joinGroup(Group group) {
 		return this.joinedGroups.add(group);
 
@@ -101,6 +104,14 @@ public class User implements Comparable<User>{
 	}
 	public boolean removeHobby(String hobby) {
 		return this.hobbies.remove(hobby);
+	}
+	
+	public boolean isPremium() {
+		return isPremium;
+	}
+
+	public void setPremium(boolean isPremium) {
+		this.isPremium = isPremium;
 	}
 	
 	public String getPassword() {
