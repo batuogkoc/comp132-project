@@ -11,7 +11,7 @@ import mvc.*;
 public class MainPage extends JPanel{
 
 	public MainPage(JComponent currentPage) {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BorderLayout());
 
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
@@ -28,8 +28,8 @@ public class MainPage extends JPanel{
 		ControllerEventButton groupsPageButton = new ControllerEventButton("Groups", "GROUPS PAGE");
 		buttons.add(groupsPageButton);
 		
-		add(currentPage);
-		add(buttons);
+		add(currentPage, BorderLayout.CENTER);
+		add(buttons, BorderLayout.PAGE_END);
 		
 
 		
