@@ -14,6 +14,7 @@ public class Login extends JPanel{
 	private final JButton loginButton;
 	private final JTextField nicknameTextField;
 	private final JTextField passwordTextField;
+	private final JButton newAccountButton;
 	public Login() {
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -39,18 +40,36 @@ public class Login extends JPanel{
 		loginButton = new JButton("Login");
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		gbc.gridwidth = 2;
+		gbc.gridwidth = 1;
 		add(loginButton, gbc);
 		
+		newAccountButton = new JButton("New Account");
+		gbc.gridx = 1;
+		gbc.gridy = 2;
+		gbc.gridwidth = 1;
+		add(newAccountButton, gbc);
+		
 		getLoginButton().addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent ae) {
 				User authResult = User.authenticateUser(getEnteredNickname(), getEnteredPassword());
 				if(authResult != null) {
 					Model.setCurrentUser(authResult);
 					Controller.sendEvent("HOME PAGE");
 				}
+				else {
+					JOptionPane.showMessageDialog(View.getFrame(), "Wrong nickname or password", "Alert", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
+		getNewAccountButton().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Controller.sendEvent("NEW ACCOUNT");
+			}
+		});
+		
 	}
 	public String getEnteredPassword() {
 		return passwordTextField.getText();
@@ -60,5 +79,8 @@ public class Login extends JPanel{
 	}
 	public JButton getLoginButton() {
 		return loginButton;
+	}
+	public JButton getNewAccountButton() {
+		return newAccountButton;
 	}
 }

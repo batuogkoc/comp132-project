@@ -3,8 +3,12 @@ package frontend;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
+import javax.print.attribute.standard.JobKOctetsProcessed;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 
@@ -39,6 +43,7 @@ public class ProfilePage extends JPanel {
 		
 		JPanel imagePanel = new JPanel();
 		GridBagConstraints gbc_imagePanel = new GridBagConstraints();
+		gbc_imagePanel.gridheight = 2;
 		gbc_imagePanel.insets = new Insets(0, 0, 5, 5);
 		gbc_imagePanel.fill = GridBagConstraints.BOTH;
 		gbc_imagePanel.gridx = 0;
@@ -266,7 +271,6 @@ public class ProfilePage extends JPanel {
 		
 		dynamicPanel = new JPanel();
 		GridBagConstraints gbc_dynamicPanel = new GridBagConstraints();
-		gbc_dynamicPanel.gridheight = 2;
 		gbc_dynamicPanel.gridwidth = 2;
 		gbc_dynamicPanel.fill = GridBagConstraints.BOTH;
 		gbc_dynamicPanel.gridx = 0;
@@ -284,6 +288,7 @@ public class ProfilePage extends JPanel {
 		if(viewingUser == viewedUser) {
 			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26374192294213");
 			setDynamicPanelContents(new ContentsPanel(viewedUser.getContents()));
+			btnCreateGroup.setEnabled(viewedUser.isPremium());
 		}
 		else if (viewingUser.getFollowedUsers().contains(viewedUser)) {
 			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26455931790925");
@@ -322,7 +327,23 @@ public class ProfilePage extends JPanel {
 					nameField.setText(viewedUser.getName());
 					surnameField.setText(viewedUser.getSurname());
 					accountTypeCombo.setSelectedIndex(viewedUser.isPremium()?1:0);
-					System.out.println(viewedUser);
+				}
+			}
+		});
+		btnLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int a = JOptionPane.showConfirmDialog(View.getFrame(), "Are you sure you want to log out?", "Logging out", JOptionPane.YES_NO_OPTION);
+				if(a == JOptionPane.YES_OPTION) {
+					Controller.sendEvent("LOGIN");
+				}
+			}
+		});
+		btnDeleteAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int a = JOptionPane.showConfirmDialog(View.getFrame(), "Are you sure you want to delete your account?", "Deleting account", JOptionPane.YES_NO_OPTION);
+				if(a == JOptionPane.YES_OPTION) {
+					viewedUser.deleteUser();
+					Controller.sendEvent("LOGIN");
 				}
 			}
 		});

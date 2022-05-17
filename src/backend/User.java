@@ -3,6 +3,8 @@ package backend;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class User implements Comparable<User>{
 	private final String nickname;
@@ -11,7 +13,7 @@ public class User implements Comparable<User>{
 	private String surname;
 	private int age;
 	private String emailAddress;
-	private String profilePicturePath;
+	private String profilePicturePath = "";
 	private static String defaultProfilePicturePath;
 	private boolean isPremium;
 	private TreeSet<String> hobbies = new TreeSet<String>();
@@ -20,18 +22,25 @@ public class User implements Comparable<User>{
 	private TreeSet<Content> contents = new TreeSet<Content>();
 	private static TreeMap<String, User> users = new TreeMap<>();
 	
-	
+	static {
+		defaultProfilePicturePath = ".//images//defaultProfilePicture.png";
+	}
 	
 	public User(String nickname, String password, String name, String surname, int age, String emailAddress, boolean isPremium) throws IllegalArgumentException{
 		super();
 		if ( users.containsKey(nickname)){
-			throw new IllegalArgumentException("Nickname must be unique");
+			throw new IllegalArgumentException("This nickname is taken");
 		}
 		this.nickname = nickname;
 		this.password = password;
 		this.name = name;
 		this.surname = surname;
 		this.age = age;
+		Pattern pattern = Pattern.compile(".+@.+\\..+");
+		Matcher matcher = pattern.matcher(emailAddress);
+		if(!matcher.find()) {
+			throw new IllegalArgumentException("Invalid email");
+		}
 		this.emailAddress = emailAddress;
 		this.isPremium = isPremium;
 		users.put(nickname, this);
@@ -74,7 +83,12 @@ public class User implements Comparable<User>{
 		return null;
 	}
 	
-	
+	public boolean deleteUser() {
+		if(users.remove(this.getNickname()) != null)
+			return true;
+		else
+			return false;
+	}
 	
 	@Override
 	public String toString() {
@@ -155,7 +169,7 @@ public class User implements Comparable<User>{
 	}
 
 	public String getProfilePicturePath() {
-		return profilePicturePath;
+		return profilePicturePath.equals("")?defaultProfilePicturePath:profilePicturePath;
 	}
 
 	public void setProfilePicturePath(String profilePicturePath) {

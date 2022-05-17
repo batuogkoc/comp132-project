@@ -13,7 +13,7 @@ import javax.swing.*;
 public class SwingTest {
 	private static JPanel mainPanel = new JPanel();
 	public static void main(String[] args) {
-		User batu = new User("creepyjokester33", "1234", "Batu Orhun", "Gunduz", 18, "batuorhungunduz@gmail.com");
+		User batu = new User("creepyjokester33", "1234", "Batu Orhun", "Gunduz", 18, "batuorhungunduz@gmail.com", true);
 		batu.addContent(new Content(batu, "First content", "Hello world!", "cat.png"));
 		batu.addContent(new Content(batu, "Second content", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "cat.png"));
 		
