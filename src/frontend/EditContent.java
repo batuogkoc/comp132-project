@@ -35,9 +35,9 @@ public class EditContent extends JPanel {
 	 */
 	public EditContent(Content content) {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0};
+		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
@@ -45,7 +45,7 @@ public class EditContent extends JPanel {
 		GridBagConstraints gbc_lblTitle = new GridBagConstraints();
 		gbc_lblTitle.anchor = GridBagConstraints.EAST;
 		gbc_lblTitle.insets = new Insets(0, 0, 5, 5);
-		gbc_lblTitle.gridx = 1;
+		gbc_lblTitle.gridx = 2;
 		gbc_lblTitle.gridy = 0;
 		add(lblTitle, gbc_lblTitle);
 		
@@ -54,13 +54,14 @@ public class EditContent extends JPanel {
 		GridBagConstraints gbc_txtTitlefield = new GridBagConstraints();
 		gbc_txtTitlefield.insets = new Insets(0, 0, 5, 0);
 		gbc_txtTitlefield.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtTitlefield.gridx = 2;
+		gbc_txtTitlefield.gridx = 3;
 		gbc_txtTitlefield.gridy = 0;
 		add(txtTitlefield, gbc_txtTitlefield);
 		txtTitlefield.setColumns(10);
 		
 		imagePanel = new JPanel();
 		GridBagConstraints gbc_imagePanel = new GridBagConstraints();
+		gbc_imagePanel.gridwidth = 2;
 		gbc_imagePanel.gridheight = 2;
 		gbc_imagePanel.insets = new Insets(0, 0, 5, 5);
 		gbc_imagePanel.fill = GridBagConstraints.BOTH;
@@ -73,7 +74,7 @@ public class EditContent extends JPanel {
 		GridBagConstraints gbc_lblText = new GridBagConstraints();
 		gbc_lblText.anchor = GridBagConstraints.EAST;
 		gbc_lblText.insets = new Insets(0, 0, 5, 5);
-		gbc_lblText.gridx = 1;
+		gbc_lblText.gridx = 2;
 		gbc_lblText.gridy = 1;
 		add(lblText, gbc_lblText);
 		
@@ -81,7 +82,7 @@ public class EditContent extends JPanel {
 		GridBagConstraints gbc_txtpnTextfield = new GridBagConstraints();
 		gbc_txtpnTextfield.insets = new Insets(0, 0, 5, 0);
 		gbc_txtpnTextfield.fill = GridBagConstraints.BOTH;
-		gbc_txtpnTextfield.gridx = 2;
+		gbc_txtpnTextfield.gridx = 3;
 		gbc_txtpnTextfield.gridy = 1;
 		add(txtpnTextfield, gbc_txtpnTextfield);
 		
@@ -92,16 +93,23 @@ public class EditContent extends JPanel {
 		gbc_btnChangePicture.gridy = 2;
 		add(btnChangePicture, gbc_btnChangePicture);
 		
+		JButton btnDelete = new JButton("Delete");
+		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
+		gbc_btnDelete.insets = new Insets(0, 0, 0, 5);
+		gbc_btnDelete.gridx = 1;
+		gbc_btnDelete.gridy = 2;
+		add(btnDelete, gbc_btnDelete);
+		
 		JButton btnCancel = new JButton("Cancel");
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 		gbc_btnCancel.insets = new Insets(0, 0, 0, 5);
-		gbc_btnCancel.gridx = 1;
+		gbc_btnCancel.gridx = 2;
 		gbc_btnCancel.gridy = 2;
 		add(btnCancel, gbc_btnCancel);
 		
 		JButton btnDone = new JButton("Done");
 		GridBagConstraints gbc_btnDone = new GridBagConstraints();
-		gbc_btnDone.gridx = 2;
+		gbc_btnDone.gridx = 3;
 		gbc_btnDone.gridy = 2;
 		add(btnDone, gbc_btnDone);
 		
@@ -138,6 +146,15 @@ public class EditContent extends JPanel {
 				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Quit without saving?", "Cancel Changes", JOptionPane.YES_NO_OPTION);
 				if(r == JOptionPane.YES_OPTION)
 					Controller.sendEvent("HOME PAGE");
+			}
+		});
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Delete content?", "Deleting content", JOptionPane.YES_NO_OPTION);
+				if(r == JOptionPane.YES_OPTION) {
+					content.delete();
+					Controller.sendEvent("HOME PAGE");
+				}				
 			}
 		});
 	}

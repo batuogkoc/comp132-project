@@ -162,7 +162,7 @@ public class CreateContent extends JPanel {
 			public void actionPerformed(ActionEvent ae) {
 				try {
 					if(comboBox.getSelectedIndex() == 0) {
-						Model.getCurrentUser().addContent(new Content(Model.getCurrentUser(), txtTitlefield.getText(), txtTextfield.getText(), picturePath));
+						Model.getCurrentUser().addContent(new Content(Model.getCurrentUser(), Model.getCurrentUser(), txtTitlefield.getText(), txtTextfield.getText(), picturePath));
 						Controller.sendEvent("HOME PAGE");
 					}
 					else {
@@ -170,8 +170,8 @@ public class CreateContent extends JPanel {
 						int i = 0;
 						while(it.hasNext()) {
 							Group group = it.next();
-							if(i+1==comboBox.getSelectedIndex()) {
-								group.addContent(new Content(Model.getCurrentUser(), txtTitlefield.getText(), txtTextfield.getText(), picturePath));
+							if(++i==comboBox.getSelectedIndex()) {
+								group.addContent(new Content(group, Model.getCurrentUser(), txtTitlefield.getText(), txtTextfield.getText(), picturePath));
 								Model.setGroupOfInterest(group);
 								Controller.sendEvent("GROUP");
 							}

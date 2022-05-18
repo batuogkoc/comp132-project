@@ -123,6 +123,11 @@ public class User implements Comparable<User>, ContentContainer{
 		for(Group group : joinedGroups) {
 			ret.addAll(group.getContents());
 		}
+		for (Content content : ret) {
+			if(content.getAuthor() == this) {
+				ret.remove(content);
+			}
+		}
 		return ret;
 	}
 	
@@ -164,7 +169,7 @@ public class User implements Comparable<User>, ContentContainer{
 	
 	@Override
 	public String toString() {
-		return "Name: " + name + " " + surname + " Email: " + emailAddress;
+		return name + " " + surname + " (" + nickname+")";
 	}
 
 	
@@ -191,6 +196,8 @@ public class User implements Comparable<User>, ContentContainer{
 	}
 	
 	public boolean addHobby(String hobby) {
+		if(hobby.equals(""))
+			return false;
 		return this.hobbies.add(hobby);
 	}
 	public boolean removeHobby(String hobby) {

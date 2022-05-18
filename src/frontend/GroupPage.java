@@ -188,9 +188,11 @@ public class GroupPage extends JPanel {
 			contentsPanel.add(new ContentsPanel(group.getContents()));
 			if(group.isCreator(viewingUser)) {
 				btnLeave.setText("Delete Group");
+				btnRemoveMembers.setEnabled(true);
 			}
 			else {
-				
+				btnLeave.setText("Leave");
+				btnRemoveMembers.setEnabled(false);
 			}
 		}
 		else {
@@ -239,20 +241,20 @@ public class GroupPage extends JPanel {
 						for (int i = 1; it.hasNext(); i++) {
 							User user = it.next();
 							if(memberRemovalComboBox.getSelectedIndex() == i) {
-//								userToRemove = user;
-								user.leaveGroup(group);
-								break;
+								if(user == group.getGroupCreator()) {
+									JOptionPane.showConfirmDialog(View.getFrame(), "Cannot remove yourself, try deleting the group.", "Error", JOptionPane.DEFAULT_OPTION);
+									break;
+								}
+								int a = JOptionPane.showConfirmDialog(View.getFrame(), "Remove "+user.toString(), "Removing user", JOptionPane.YES_NO_OPTION);
+								if(a == JOptionPane.YES_OPTION) {
+									user.leaveGroup(group);
+									break;
+								}
 							}
 						}
 					}
-					memberRemovalPanel.removeAll();
-					memberRemovalPanel.validate();
-					memberPanel.repaint();
-					membersPanel.removeAll();
-					membersPanel.add(new UsersPanel(group.getMembers()));
-					membersPanel.validate();
-					membersPanel.repaint();
-					btnRemoveMembers.setText("Remove Members");
+					Model.setGroupOfInterest(group);
+					Controller.sendEvent("GROUP");
 				}
 				else {
 					removingMembers = true;

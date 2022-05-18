@@ -305,7 +305,7 @@ public class ProfilePage extends JPanel {
 		});
 		btnGroups.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setDynamicPanelContents(new JPanel());
+				setDynamicPanelContents(new GroupsPanel(viewingUser.getJoinedGroups()));
 			}
 		});
 		btnEdit.addActionListener(new ActionListener() {
@@ -400,7 +400,13 @@ public class ProfilePage extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				setDynamicPanelContents(new GroupsPanel(viewedUser.getJoinedGroups()));
 			}
-		});		
+		});	
+		
+		btnCreateGroup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Controller.sendEvent("CREATE GROUP");
+			}
+		});
 	}
 	
 	private void setDynamicPanelContents(JComponent component) {

@@ -6,20 +6,23 @@ public class Content implements Comparable<Content>{
 	private final User author;
 	private final String title;
 	private final LocalDateTime timeOfCreation;
+	private final ContentContainer contentDestination;
 	private String text;
 	private String imagePath;
 	
-	public Content(User author, String title, String text) throws IllegalArgumentException{
+	public Content(ContentContainer contentDestination, User author, String title, String text) throws IllegalArgumentException{
 		super();
 		this.timeOfCreation = LocalDateTime.now();
 		this.author = author;
 		if(title.equals("")) {
 			throw new IllegalArgumentException("Invalid title");
 		}
+		this.contentDestination = contentDestination;
 		this.title = title;
 		this.text = text;
+		this.contentDestination.addContent(this);
 	}
-	public Content(User author, String title, String text, String imagePath) throws IllegalArgumentException{
+	public Content(ContentContainer contentDestination, User author, String title, String text, String imagePath) throws IllegalArgumentException{
 		super();
 		this.timeOfCreation = LocalDateTime.now();
 		this.author = author;
@@ -27,8 +30,10 @@ public class Content implements Comparable<Content>{
 		if(title.equals("")) {
 			throw new IllegalArgumentException("Invalid title");
 		}
+		this.contentDestination = contentDestination;
 		this.text = text;
 		this.imagePath = imagePath;
+		this.contentDestination.addContent(this);
 	}
 
 	
@@ -55,5 +60,8 @@ public class Content implements Comparable<Content>{
 	}
 	public LocalDateTime getTimeOfCreation() {
 		return timeOfCreation;
+	}
+	public boolean delete() {
+		return this.contentDestination.removeContent(this);
 	}
 }

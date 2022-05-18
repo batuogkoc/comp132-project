@@ -47,6 +47,9 @@ public class Controller {
 				View.displayView("CONTENT EDIT");
 				break;
 				
+			case "CREATE GROUP":
+				View.displayView("CREATE GROUP");
+				break;
 			default:
 				System.out.println("Controller: Unknown event code: " +eventCode);
 				break;
@@ -67,13 +70,13 @@ public class Controller {
 		batu.followUser(u2);
 		
 		batu.setProfilePicturePath(".//images//cat.png");
-		batu.addContent(new Content(batu, "First content", "Hello world!",".//images//cat.png"));
-		batu.addContent(new Content(batu, "Second content", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", ".//images//defaultProfilePicture.png"));
-		u2.addContent(new Content(u2, "Red army is strong", "lolsies", ".//images//defaultProfilePicture.png"));
+		new Content(batu, batu, "First content", "Hello world!",".//images//cat.png");
+		new Content(batu, batu, "Second content", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", ".//images//defaultProfilePicture.png");
+		new Content(u2, u2, "Red army is strong", "lolsies", ".//images//defaultProfilePicture.png");
 		Group g1 = new Group(batu, "dictators", "germany");
 		g1.addHobby("Genocide");
 		g1.addHobby("Warmongering");
-		g1.addContent(new Content(u1, "I will bomb pearl harbour", "Lol", ".//images//pearl-harbor.jpg"));
+		new Content(g1, u1, "I will bomb pearl harbour", "Lol", ".//images//pearl-harbor.jpg");
 		u1.joinGroup(g1);
 		u2.joinGroup(g1);
 	}

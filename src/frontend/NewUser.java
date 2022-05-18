@@ -33,6 +33,7 @@ public class NewUser extends JPanel {
 	private String profilePicturePath = "";
 	private JPanel imagePanel;
 	private JFileChooser fileChooser = new JFileChooser(".");
+	private JTextField txtCountryfield;
 	/**
 	 * Create the panel.
 	 */
@@ -63,9 +64,9 @@ public class NewUser extends JPanel {
 		add(infoPanel, gbc_infoPanel);
 		GridBagLayout gbl_infoPanel = new GridBagLayout();
 		gbl_infoPanel.columnWidths = new int[] {0, 0};
-		gbl_infoPanel.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0};
+		gbl_infoPanel.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_infoPanel.columnWeights = new double[]{0.0, 1.0};
-		gbl_infoPanel.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		gbl_infoPanel.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
 		infoPanel.setLayout(gbl_infoPanel);
 		
 		JLabel lblName = new JLabel("Name:");
@@ -170,10 +171,43 @@ public class NewUser extends JPanel {
 		infoPanel.add(emailField, gbc_emailField);
 		emailField.setColumns(10);
 		
+		JLabel lblCountry = new JLabel("Country:");
+		GridBagConstraints gbc_lblCountry = new GridBagConstraints();
+		gbc_lblCountry.anchor = GridBagConstraints.EAST;
+		gbc_lblCountry.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCountry.gridx = 0;
+		gbc_lblCountry.gridy = 6;
+		infoPanel.add(lblCountry, gbc_lblCountry);
+		
+		txtCountryfield = new JTextField();
+		GridBagConstraints gbc_txtCountryfield = new GridBagConstraints();
+		gbc_txtCountryfield.insets = new Insets(0, 0, 5, 0);
+		gbc_txtCountryfield.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtCountryfield.gridx = 1;
+		gbc_txtCountryfield.gridy = 6;
+		infoPanel.add(txtCountryfield, gbc_txtCountryfield);
+		txtCountryfield.setColumns(10);
+		
+		JLabel lblHobbies = new JLabel("Hobbies:");
+		GridBagConstraints gbc_lblHobbies = new GridBagConstraints();
+		gbc_lblHobbies.anchor = GridBagConstraints.EAST;
+		gbc_lblHobbies.insets = new Insets(0, 0, 5, 5);
+		gbc_lblHobbies.gridx = 0;
+		gbc_lblHobbies.gridy = 7;
+		infoPanel.add(lblHobbies, gbc_lblHobbies);
+		
+		JTextPane txtpnHobbiesfield = new JTextPane();
+		GridBagConstraints gbc_txtpnHobbiesfield = new GridBagConstraints();
+		gbc_txtpnHobbiesfield.insets = new Insets(0, 0, 5, 0);
+		gbc_txtpnHobbiesfield.fill = GridBagConstraints.BOTH;
+		gbc_txtpnHobbiesfield.gridx = 1;
+		gbc_txtpnHobbiesfield.gridy = 7;
+		infoPanel.add(txtpnHobbiesfield, gbc_txtpnHobbiesfield);
+		
 		JCheckBox chckbxPremium = new JCheckBox("Premium");
 		GridBagConstraints gbc_chckbxPremium = new GridBagConstraints();
 		gbc_chckbxPremium.gridx = 1;
-		gbc_chckbxPremium.gridy = 6;
+		gbc_chckbxPremium.gridy = 8;
 		infoPanel.add(chckbxPremium, gbc_chckbxPremium);
 		
 		JButton btnChooseProfilePicture = new JButton("Choose Profile Picture");
@@ -236,7 +270,11 @@ public class NewUser extends JPanel {
 		btnCreateNewUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					Model.setCurrentUser(new User(nicknameField.getText(), passwordField.getText(), nameField.getText(), surnameField.getText(), Integer.parseInt(ageField.getText()), emailField.getText(), chckbxPremium.isSelected()));
+					User user = new User(nicknameField.getText(), passwordField.getText(), nameField.getText(), surnameField.getText(), Integer.parseInt(ageField.getText()), emailField.getText(), chckbxPremium.isSelected());
+					for(String hobby : txtpnHobbiesfield.getText().split("\\r?\\n")) {
+						user.addHobby(hobby);
+					}
+					Model.setCurrentUser(user);
 					Controller.sendEvent("HOME PAGE");
 				}
 				catch(NumberFormatException e) {

@@ -53,21 +53,29 @@ public class Group implements ContentContainer{
 	}
 
 	public boolean addHobby(String hobby) {
+		if(hobby.equals(""))
+			return false;
 		return this.hobbies.add(hobby);
 	}
 	public boolean removeHobby(String hobby) {
 		return this.hobbies.remove(hobby);
 	}
 	
-	private boolean addMember(User member) {
-		return member.joinGroup(this);
-	}
-	
-	private boolean removeMember(User member) {
-		return member.leaveGroup(this);
-	}
+//	private boolean addMember(User member) {
+//		return member.joinGroup(this);
+//	}
+//	
+//	private boolean removeMember(User member) {
+//		return member.leaveGroup(this);
+//	}
 	
 	public boolean leave(User member) {
+		for (Content content : contents) {
+			if(content.getAuthor() == member) {
+				removeContent(content);
+			}
+		}
+		System.out.println(contents);
 		return this.members.remove(member);
 	}
 	

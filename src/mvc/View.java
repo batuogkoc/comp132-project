@@ -12,7 +12,7 @@ public class View {
 	
 	static {
 		f = new JFrame();
-		f.setSize(400, 300);
+		f.setSize(800, 600);
 		f.setLayout(new GridLayout(1,1));
 		f.setVisible(true);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,7 +52,9 @@ public class View {
 		case "CONTENT EDIT":
 			setFrameContents(new MainPage(new EditContent(Model.getContentOfInterest())));
 			break;
-		
+		case "CREATE GROUP":
+			setFrameContents(new MainPage(new NewGroup()));
+			break;
 		default:
 			System.out.println("View: Unknown view code: " +viewCode);
 			break;
