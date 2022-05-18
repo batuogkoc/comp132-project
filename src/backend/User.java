@@ -1,5 +1,6 @@
 package backend;
 
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,6 +20,7 @@ public class User implements Comparable<User>, ContentContainer{
 	private HashSet<Group> joinedGroups = new HashSet<Group>();
 	private TreeSet<Content> contents = new TreeSet<Content>();
 	private static TreeMap<String, User> users = new TreeMap<>();
+	private static SecureRandom rand = new SecureRandom();
 	
 	static {
 		defaultProfilePicturePath = ".//images//defaultProfilePicture.png";
@@ -52,6 +54,57 @@ public class User implements Comparable<User>, ContentContainer{
 		return this.nickname.compareTo(usr.nickname);
 	}
 	
+	public Collection<User> recommendUsers() {
+		TreeMap<Double, User> sortedMap = new TreeMap<>();
+		for (User user : users.values()) {
+			sortedMap.put(this.getLikeness(user), user);
+		}
+		ArrayList<User> ret = new ArrayList<User>();
+		for (Double key : sortedMap.keySet()) {
+			if(sortedMap.get(key) != this)
+				ret.add(sortedMap.get(key));
+		}
+		Collections.reverse(ret);
+		return ret;
+	}
+	
+	
+	public Collection<Group> recommendGroups() {
+		TreeMap<Double, Group> sortedMap = new TreeMap<>();
+		for (Group group : Group.getGroups().values()) {
+			sortedMap.put(this.getLikenessGroup(group), group);
+		}
+		ArrayList<Group> ret = new ArrayList<Group>();
+		for (Double key : sortedMap.keySet()) {
+			ret.add(sortedMap.get(key));
+		}
+		Collections.reverse(ret);
+		return ret;
+	}
+	
+	public double getLikeness(User user) {
+		double ret = 0;
+		for (String hobbyThis : this.hobbies) {
+			for (String hobbyTheirs : user.hobbies) {
+				if(hobbyThis.equals(hobbyTheirs)) {
+					ret++;
+				}
+			}
+		}
+		return ret+rand.nextDouble()/100;
+	}
+	
+	public double getLikenessGroup(Group group) {
+		double ret = 0;
+		for (String hobbyThis : this.hobbies) {
+			for (String hobbyTheirs : group.getHobbies()) {
+				if(hobbyThis.equals(hobbyTheirs)) {
+					ret++;
+				}
+			}
+		}
+		return ret+rand.nextDouble()/100;
+	}
 	public HashSet<Content> getReceivedContents(){
 		HashSet<Content> ret = new HashSet<>();
 		for (User followedUser : followedUsers) {

@@ -59,7 +59,9 @@ public class Controller {
 	
 	private static void __initialiseModel() {
 		User batu = new User("a", "a", "Batu Orhun", "Gunduz", 18, "batuorhungunduz@gmail.com", true);
+		batu.addHobby("death");
 		User u1 = new User("b", "b", "Emperor", "Hirohito", 40, "greateasterncoprosperitysphere@gmail.com", false);
+		u1.addHobby("death");
 		User u2 = new User("c", "c", "Joseph", "Stalin", 40, "revolution@gmail.com", true);
 		batu.followUser(u1);
 		batu.followUser(u2);
@@ -67,7 +69,7 @@ public class Controller {
 		batu.setProfilePicturePath(".//images//cat.png");
 		batu.addContent(new Content(batu, "First content", "Hello world!",".//images//cat.png"));
 		batu.addContent(new Content(batu, "Second content", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", ".//images//defaultProfilePicture.png"));
-		
+		u2.addContent(new Content(u2, "Red army is strong", "lolsies", ".//images//defaultProfilePicture.png"));
 		Group g1 = new Group(batu, "dictators", "germany");
 		g1.addHobby("Genocide");
 		g1.addHobby("Warmongering");

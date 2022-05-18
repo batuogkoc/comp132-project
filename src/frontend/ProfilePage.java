@@ -353,6 +353,16 @@ public class ProfilePage extends JPanel {
 				setDynamicPanelContents(new UsersPanel(viewingUser.getFollowedUsers()));
 			}
 		});
+		btnSuggestUsers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setDynamicPanelContents(new UsersPanel(viewingUser.recommendUsers()));
+			}
+		});
+		btnSuggestGroups.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setDynamicPanelContents(new GroupsPanel(viewingUser.recommendGroups()));
+			}
+		});
 	}
 	
 	private void setDynamicPanelContents(JComponent component) {

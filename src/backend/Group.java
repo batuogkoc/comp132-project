@@ -23,8 +23,13 @@ public class Group implements ContentContainer{
 		this.name = name;
 		this.country = country;
 		this.groupCreator.joinGroup(this);
+		groups.put(name, this);
 	}
 	
+	public static HashMap<String, Group> getGroups() {
+		return groups;
+	}
+
 	@Override
 	public boolean removeContent(Content content) {
 		return contents.remove(content);
