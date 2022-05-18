@@ -23,11 +23,28 @@ public class Controller {
 				break;
 				
 			case "PROFILE PAGE":
-				View.displayView(eventCode);
+				Model.setUserOfInterest(Model.getCurrentUser());
+				View.displayView("USER PROFILE");
 				break;
 			
 			case "NEW ACCOUNT":
 				View.displayView(eventCode);
+				break;
+			
+			case "GROUPS PAGE":
+				View.displayView("GROUPS PAGE");
+				break;
+				
+			case "OTHER USER":
+				View.displayView("USER PROFILE");
+				break;
+				
+			case "GROUP":
+				View.displayView("GROUP");
+				break;
+				
+			case "CONTENT EDIT":
+				View.displayView("CONTENT EDIT");
 				break;
 				
 			default:
@@ -41,12 +58,22 @@ public class Controller {
 	}
 	
 	private static void __initialiseModel() {
-		User batu = new User("a", "b", "Batu Orhun", "Gunduz", 18, "batuorhungunduz@gmail.com", true);
+		User batu = new User("a", "a", "Batu Orhun", "Gunduz", 18, "batuorhungunduz@gmail.com", true);
+		User u1 = new User("b", "b", "Emperor", "Hirohito", 40, "greateasterncoprosperitysphere@gmail.com", false);
+		User u2 = new User("c", "c", "Joseph", "Stalin", 40, "revolution@gmail.com", true);
+		batu.followUser(u1);
+		batu.followUser(u2);
+		
 		batu.setProfilePicturePath(".//images//cat.png");
 		batu.addContent(new Content(batu, "First content", "Hello world!",".//images//cat.png"));
 		batu.addContent(new Content(batu, "Second content", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", ".//images//defaultProfilePicture.png"));
-		User m1 = new User("c", "d", "Emperor", "Hirohito", 40, "greateasterncoprosperitysphere@gmail.com", false);
-		batu.followUser(m1);
+		
+		Group g1 = new Group(batu, "dictators", "germany");
+		g1.addHobby("Genocide");
+		g1.addHobby("Warmongering");
+		g1.addContent(new Content(u1, "I will bomb pearl harbour", "Lol", ".//images//pearl-harbor.jpg"));
+		u1.joinGroup(g1);
+		u2.joinGroup(g1);
 	}
 	
 

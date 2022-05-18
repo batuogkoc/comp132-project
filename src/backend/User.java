@@ -1,12 +1,10 @@
 package backend;
 
-import java.util.ArrayList;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class User implements Comparable<User>{
+public class User implements Comparable<User>, ContentContainer{
 	private final String nickname;
 	private String password;
 	private String name;
@@ -18,7 +16,7 @@ public class User implements Comparable<User>{
 	private boolean isPremium;
 	private TreeSet<String> hobbies = new TreeSet<String>();
 	private TreeSet<User> followedUsers = new TreeSet<User>();
-	private TreeSet<Group> joinedGroups = new TreeSet<Group>();
+	private HashSet<Group> joinedGroups = new HashSet<Group>();
 	private TreeSet<Content> contents = new TreeSet<Content>();
 	private static TreeMap<String, User> users = new TreeMap<>();
 	
@@ -97,18 +95,23 @@ public class User implements Comparable<User>{
 
 	
 	public boolean joinGroup(Group group) {
-		return this.joinedGroups.add(group);
-
+		if(group.join(this))
+			return this.joinedGroups.add(group);
+		return false;
 	}
 	
 	public boolean leaveGroup(Group group) {
-		return this.joinedGroups.remove(group);
+		if(group.leave(this))
+			return this.joinedGroups.remove(group);
+		else
+			return false;
 	}
 	
 	public boolean addContent(Content c) {
 		return this.contents.add(c);
 	}
-		
+	
+	@Override
 	public boolean removeContent(Content c) {
 		return this.contents.remove(c);
 	}
@@ -196,7 +199,7 @@ public class User implements Comparable<User>{
 		return followedUsers;
 	}
 
-	public TreeSet<Group> getJoinedGroups() {
+	public HashSet<Group> getJoinedGroups() {
 		return joinedGroups;
 	}
 

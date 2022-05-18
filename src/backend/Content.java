@@ -9,25 +9,31 @@ public class Content implements Comparable<Content>{
 	private String text;
 	private String imagePath;
 	
-	public Content(User author, String title, String text) {
+	public Content(User author, String title, String text) throws IllegalArgumentException{
 		super();
 		this.timeOfCreation = LocalDateTime.now();
 		this.author = author;
+		if(title.equals("")) {
+			throw new IllegalArgumentException("Invalid title");
+		}
 		this.title = title;
 		this.text = text;
 	}
-	public Content(User author, String title, String text, String imagePath) {
+	public Content(User author, String title, String text, String imagePath) throws IllegalArgumentException{
 		super();
 		this.timeOfCreation = LocalDateTime.now();
 		this.author = author;
 		this.title = title;
+		if(title.equals("")) {
+			throw new IllegalArgumentException("Invalid title");
+		}
 		this.text = text;
 		this.imagePath = imagePath;
 	}
 
 	
 	public int compareTo(Content c) {
-		return this.timeOfCreation.compareTo(c.timeOfCreation);
+		return -this.timeOfCreation.compareTo(c.timeOfCreation);
 	}
 	public String getText() {
 		return text;

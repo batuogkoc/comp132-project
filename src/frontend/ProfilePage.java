@@ -35,10 +35,10 @@ public class ProfilePage extends JPanel {
 	 */
 	public ProfilePage(User viewingUser, User viewedUser) {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] {80, 160};
-		gridBagLayout.rowHeights = new int[] {75, 100, 250};
-		gridBagLayout.columnWeights = new double[]{1.0, 1.0};
-		gridBagLayout.rowWeights = new double[]{1.0, 1.0, 1.0};
+		gridBagLayout.columnWidths = new int[] {20, 60};
+		gridBagLayout.rowHeights = new int[] {40, 40, 80};
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 1.0};
 		setLayout(gridBagLayout);
 		
 		JPanel imagePanel = new JPanel();
@@ -259,14 +259,14 @@ public class ProfilePage extends JPanel {
 		gbl_unfollowedProfile.columnWidths = new int[] {0};
 		gbl_unfollowedProfile.rowHeights = new int[] {0};
 		gbl_unfollowedProfile.columnWeights = new double[]{1.0};
-		gbl_unfollowedProfile.rowWeights = new double[]{0.0, 0.0};
+		gbl_unfollowedProfile.rowWeights = new double[]{0.0};
 		unfollowedProfile.setLayout(gbl_unfollowedProfile);
 		
 		JButton btnFollow = new JButton("Follow");
 		GridBagConstraints gbc_btnFollow = new GridBagConstraints();
-		gbc_btnFollow.insets = new Insets(0, 0, 5, 5);
+		gbc_btnFollow.insets = new Insets(0, 0, 5, 0);
 		gbc_btnFollow.gridx = 0;
-		gbc_btnFollow.gridy = 1;
+		gbc_btnFollow.gridy = 0;
 		unfollowedProfile.add(btnFollow, gbc_btnFollow);
 		
 		dynamicPanel = new JPanel();
@@ -345,6 +345,12 @@ public class ProfilePage extends JPanel {
 					viewedUser.deleteUser();
 					Controller.sendEvent("LOGIN");
 				}
+			}
+		});
+		
+		btnFriends.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setDynamicPanelContents(new UsersPanel(viewingUser.getFollowedUsers()));
 			}
 		});
 	}
