@@ -12,13 +12,14 @@ import javax.swing.event.DocumentListener;
 import backend.*;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.*;
 import java.awt.GridBagLayout;
 import java.awt.GridBagLayoutInfo;
 
 import javax.swing.JButton;
 import java.awt.Insets;
 /**
- * Home Page of the application. Has a search bar that allows a user to sarch groups and other users, and a contents panel that displays the contents the user's groups and friends posted.
+ * Home Page of the application. Has a search bar that allows a user to search groups, contents and other users, and a contents panel that displays the contents the user's groups and friends posted.
  * @author batu
  *
  */
@@ -71,23 +72,45 @@ public class HomePage extends JPanel {
 					gbc.gridx=0;
 					gbc.gridy=0;
 					gbc.fill = GridBagConstraints.BOTH;
+					gbc.weightx =1.0;
 					gbc.weighty =0.0;
 					searchResultsPanel.add(new JLabel("Users:"),gbc);
 					gbc.gridx=0;
 					gbc.gridy=1;
 					gbc.fill = GridBagConstraints.BOTH;
+					gbc.weightx =1.0;
 					gbc.weighty =1.0;
-					searchResultsPanel.add(new UsersPanel(User.searchUsers(txtSearch.getText())), gbc);
+					searchResultsPanel.add(new UsersPanel(User.searchUsers(txtSearch.getText())), gbc);//search users for the keyword
 					gbc.gridx=0;
 					gbc.gridy=2;
 					gbc.fill = GridBagConstraints.BOTH;
+					gbc.weightx =1.0;
 					gbc.weighty =0.0;
 					searchResultsPanel.add(new JLabel("Groups:"),gbc);
 					gbc.gridx=0;
 					gbc.gridy=3;
+					gbc.weightx =1.0;
 					gbc.weighty =1.0;
 					gbc.fill = GridBagConstraints.BOTH;
-					searchResultsPanel.add(new GroupsPanel(Group.searchGroups(txtSearch.getText())),gbc);
+					searchResultsPanel.add(new GroupsPanel(Group.searchGroups(txtSearch.getText())),gbc); //search groups by keyword
+					gbc.gridx=0;
+					gbc.gridy=4;
+					gbc.fill = GridBagConstraints.BOTH;
+					gbc.weightx =1.0;
+					gbc.weighty =0.0;
+					searchResultsPanel.add(new JLabel("Contents:"),gbc);
+					gbc.gridx=0;
+					gbc.gridy=5;
+					gbc.weightx =1.0;
+					gbc.weighty =1.0;
+					gbc.fill = GridBagConstraints.BOTH;
+					HashSet<ContentPanel> searchedContentsPanels = new HashSet<>();//create empty hashset so that we can store the searched contents as contentpanel in them and then pass the hashset into the verticalscrollpanel object
+					for(Content content : viewingUser.getReceivedContents()) {
+						if(content.getTitle().contains(txtSearch.getText())) {
+							searchedContentsPanels.add(new ContentPanel(content));//if keywords exists in the title of content, generate a ContentPanel from it and add it to the set
+						}
+					}
+					searchResultsPanel.add(new VerticalScrollPanel(searchedContentsPanels),gbc);//display the contents in the form of a vertical scroll panel
 					setDynamicPanelContents(searchResultsPanel); //update the dynamicPanel
 				}
 			}
