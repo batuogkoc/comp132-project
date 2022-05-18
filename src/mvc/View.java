@@ -28,7 +28,7 @@ public class View {
 	public static void displayView(String viewCode) {
 		switch (viewCode) {
 		case "HOME PAGE":
-			setFrameContents(new MainPage(new ContentsPanel(Model.getCurrentUser().getContents())));
+			setFrameContents(new MainPage(new ContentsPanel(Model.getCurrentUser().getReceivedContents())));
 			break;
 		case "ADD CONTENT MENU":
 			setFrameContents(new MainPage(new CreateContent()));

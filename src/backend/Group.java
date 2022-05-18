@@ -62,8 +62,8 @@ public class Group implements ContentContainer{
 	}
 	
 	public void deleteGroup() {
-		for (User member : members) {
-			member.leaveGroup(this);
+		while (members.size()>0) {
+			members.first().leaveGroup(this);
 		}
 		groupCreator.leaveGroup(this);
 	}

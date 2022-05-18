@@ -5,11 +5,16 @@ import javax.swing.*;
 
 import backend.*;
 import mvc.*;
+import java.awt.event.*;
+import java.beans.beancontext.BeanContextMembershipListener;
+import java.util.Iterator;
 
 public class GroupPage extends JPanel {
 	private JTextField txtNamefield;
 	private JTextField txtCountryfield;
 	private JTextField txtCreatorfield;
+	private boolean removingMembers = false;
+	private JComboBox memberRemovalComboBox;
 
 	/**
 	 * Create the panel.
@@ -95,7 +100,7 @@ public class GroupPage extends JPanel {
 		GridBagLayout gbl_memberPanel = new GridBagLayout();
 		gbl_memberPanel.columnWidths = new int[]{0, 0, 0, 0};
 		gbl_memberPanel.rowHeights = new int[]{0, 0, 0, 0};
-		gbl_memberPanel.columnWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_memberPanel.columnWeights = new double[]{1.0, 0.0, 1.0, Double.MIN_VALUE};
 		gbl_memberPanel.rowWeights = new double[]{0.0, 1.0, 1.0, Double.MIN_VALUE};
 		memberPanel.setLayout(gbl_memberPanel);
 		
@@ -124,6 +129,13 @@ public class GroupPage extends JPanel {
 		memberPanel.add(txtCreatorfield, gbc_txtCreatorfield);
 		txtCreatorfield.setColumns(10);
 		
+		JButton btnRemoveMembers = new JButton("Remove Members");
+		GridBagConstraints gbc_btnRemoveMembers = new GridBagConstraints();
+		gbc_btnRemoveMembers.insets = new Insets(0, 0, 5, 5);
+		gbc_btnRemoveMembers.gridx = 0;
+		gbc_btnRemoveMembers.gridy = 1;
+		memberPanel.add(btnRemoveMembers, gbc_btnRemoveMembers);
+		
 		JLabel lblMembers = new JLabel("Members");
 		GridBagConstraints gbc_lblMembers = new GridBagConstraints();
 		gbc_lblMembers.fill = GridBagConstraints.VERTICAL;
@@ -140,6 +152,15 @@ public class GroupPage extends JPanel {
 		gbc_membersPanel.gridy = 1;
 		memberPanel.add(membersPanel, gbc_membersPanel);
 		membersPanel.setLayout(new GridLayout(1, 1, 0, 0));
+		
+		JPanel memberRemovalPanel = new JPanel();
+		GridBagConstraints gbc_memberRemovalPanel = new GridBagConstraints();
+		gbc_memberRemovalPanel.insets = new Insets(0, 0, 0, 5);
+		gbc_memberRemovalPanel.fill = GridBagConstraints.BOTH;
+		gbc_memberRemovalPanel.gridx = 0;
+		gbc_memberRemovalPanel.gridy = 2;
+		memberPanel.add(memberRemovalPanel, gbc_memberRemovalPanel);
+		memberRemovalPanel.setLayout(new GridLayout(1, 1, 0, 0));
 		
 		JLabel lblContents = new JLabel("Contents");
 		GridBagConstraints gbc_lblContents = new GridBagConstraints();
@@ -160,22 +181,97 @@ public class GroupPage extends JPanel {
 		txtNamefield.setText(group.getName());
 		txtCountryfield.setText(group.getCountry());
 		if(group.getMembers().contains(viewingUser)) {
-//			if(group.isCreator(viewingUser)) {
-//				
-//			}
-//			else {
 			CardLayout l = (CardLayout)dynamicPanel.getLayout();
-			l.show(dynamicPanel, "name_23002355336325");
-			
+			l.show(dynamicPanel, "name_23002355336325");		
 			txtCreatorfield.setText(group.getGroupCreator().toString());
 			membersPanel.add(new UsersPanel(group.getMembers()));
 			contentsPanel.add(new ContentsPanel(group.getContents()));
-//			}
+			if(group.isCreator(viewingUser)) {
+				btnLeave.setText("Delete Group");
+			}
+			else {
+				
+			}
 		}
 		else {
 			CardLayout l = (CardLayout)dynamicPanel.getLayout();
 			l.show(dynamicPanel, "name_22987395406545");
 		}
+		
+		btnJoin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Join group?", "Joining Group", JOptionPane.YES_NO_OPTION);
+				if(r == JOptionPane.YES_OPTION) {
+					viewingUser.joinGroup(group);
+					Model.setGroupOfInterest(group);
+					Controller.sendEvent("GROUP");
+				}
+			}
+		});
+		btnLeave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(group.isCreator(viewingUser)) {
+					int r = JOptionPane.showConfirmDialog(View.getFrame(), "Delete group?", "Deleting Group", JOptionPane.YES_NO_OPTION);
+					if(r == JOptionPane.YES_OPTION) {
+						group.deleteGroup();
+						Model.setGroupOfInterest(null);
+						Controller.sendEvent("HOME PAGE");
+					}
+				}
+				else {
+					int r = JOptionPane.showConfirmDialog(View.getFrame(), "Leave group?", "Leaving Group", JOptionPane.YES_NO_OPTION);
+					if(r == JOptionPane.YES_OPTION) {
+						viewingUser.leaveGroup(group);
+						Model.setGroupOfInterest(group);
+						Controller.sendEvent("GROUP");
+					}
+				}
+				
+			}
+		});
+		btnRemoveMembers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(removingMembers) {
+					removingMembers = false;
+					if(memberRemovalComboBox.getSelectedIndex() != 0) {
+//						User userToRemove;
+						Iterator<User> it = group.getMembers().iterator();
+						for (int i = 1; it.hasNext(); i++) {
+							User user = it.next();
+							if(memberRemovalComboBox.getSelectedIndex() == i) {
+//								userToRemove = user;
+								user.leaveGroup(group);
+								break;
+							}
+						}
+					}
+					memberRemovalPanel.removeAll();
+					memberRemovalPanel.validate();
+					memberPanel.repaint();
+					membersPanel.removeAll();
+					membersPanel.add(new UsersPanel(group.getMembers()));
+					membersPanel.validate();
+					membersPanel.repaint();
+					btnRemoveMembers.setText("Remove Members");
+				}
+				else {
+					removingMembers = true;
+					String[] comboboxItems = new String[group.getMembers().size()+1];
+					comboboxItems[0] = "Cancel";
+					Iterator<User> it = group.getMembers().iterator();
+					for (int i = 1; it.hasNext(); i++) {
+						comboboxItems[i] = (it.next().getNickname());
+					}
+					memberRemovalComboBox = new JComboBox(comboboxItems);
+					memberRemovalPanel.add(memberRemovalComboBox);
+					membersPanel.removeAll();
+					membersPanel.add(new UsersPanel(group.getMembers()));
+					membersPanel.validate();
+					membersPanel.repaint();
+					btnRemoveMembers.setText("Done");
+				}
+			}
+		});
 	}
 
 }

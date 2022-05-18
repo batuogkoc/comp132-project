@@ -52,6 +52,17 @@ public class User implements Comparable<User>, ContentContainer{
 		return this.nickname.compareTo(usr.nickname);
 	}
 	
+	public HashSet<Content> getReceivedContents(){
+		HashSet<Content> ret = new HashSet<>();
+		for (User followedUser : followedUsers) {
+			ret.addAll(followedUser.getContents());
+		}
+		for(Group group : joinedGroups) {
+			ret.addAll(group.getContents());
+		}
+		return ret;
+	}
+	
 	public boolean followUser(User usr) {
 		if (usr!=this && (!this.followedUsers.contains(usr))) {
 			this.followedUsers.add(usr);
