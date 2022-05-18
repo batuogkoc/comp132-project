@@ -61,11 +61,11 @@ public class Controller {
 	}
 	
 	private static void __initialiseModel() {
-		User batu = new User("a", "a", "Batu Orhun", "Gunduz", 18, "batuorhungunduz@gmail.com", true);
+		User batu = new User("a", "a", "Batu Orhun", "Gunduz", 18, "batuorhungunduz@gmail.com", true, "Turkey");
 		batu.addHobby("death");
-		User u1 = new User("b", "b", "Emperor", "Hirohito", 40, "greateasterncoprosperitysphere@gmail.com", false);
+		User u1 = new User("b", "b", "Emperor", "Hirohito", 40, "greateasterncoprosperitysphere@gmail.com", false, "Japan");
 		u1.addHobby("death");
-		User u2 = new User("c", "c", "Joseph", "Stalin", 40, "revolution@gmail.com", true);
+		User u2 = new User("c", "c", "Joseph", "Stalin", 40, "revolution@gmail.com", true, "Soviet Union");
 		batu.followUser(u1);
 		batu.followUser(u2);
 		

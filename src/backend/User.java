@@ -15,6 +15,7 @@ public class User implements Comparable<User>, ContentContainer{
 	private String profilePicturePath = "";
 	private static String defaultProfilePicturePath;
 	private boolean isPremium;
+	private String country;
 	private TreeSet<String> hobbies = new TreeSet<String>();
 	private TreeSet<User> followedUsers = new TreeSet<User>();
 	private HashSet<Group> joinedGroups = new HashSet<Group>();
@@ -26,7 +27,7 @@ public class User implements Comparable<User>, ContentContainer{
 		defaultProfilePicturePath = ".//images//defaultProfilePicture.png";
 	}
 	
-	public User(String nickname, String password, String name, String surname, int age, String emailAddress, boolean isPremium) throws IllegalArgumentException{
+	public User(String nickname, String password, String name, String surname, int age, String emailAddress, boolean isPremium, String country) throws IllegalArgumentException{
 		super();
 		if ( users.containsKey(nickname)){
 			throw new IllegalArgumentException("This nickname is taken");
@@ -43,6 +44,7 @@ public class User implements Comparable<User>, ContentContainer{
 		}
 		this.emailAddress = emailAddress;
 		this.isPremium = isPremium;
+		this.country = country;
 		users.put(nickname, this);
 	}
 
@@ -101,7 +103,7 @@ public class User implements Comparable<User>, ContentContainer{
 				}
 			}
 		}
-		return ret+rand.nextDouble()/100;
+		return ret+rand.nextDouble()/100+(user.country.equals(this.country)?1:0)-Math.abs(age-user.age);
 	}
 	
 	public double getLikenessGroup(Group group) {
@@ -113,7 +115,7 @@ public class User implements Comparable<User>, ContentContainer{
 				}
 			}
 		}
-		return ret+rand.nextDouble()/100;
+		return ret+rand.nextDouble()/100+(group.getCountry().equals(this.country)?1:0);
 	}
 	public HashSet<Content> getReceivedContents(){
 		HashSet<Content> ret = new HashSet<>();
@@ -203,7 +205,13 @@ public class User implements Comparable<User>, ContentContainer{
 	public boolean removeHobby(String hobby) {
 		return this.hobbies.remove(hobby);
 	}
-	
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
 	public boolean isPremium() {
 		return isPremium;
 	}

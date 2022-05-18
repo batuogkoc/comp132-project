@@ -270,7 +270,7 @@ public class NewUser extends JPanel {
 		btnCreateNewUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					User user = new User(nicknameField.getText(), passwordField.getText(), nameField.getText(), surnameField.getText(), Integer.parseInt(ageField.getText()), emailField.getText(), chckbxPremium.isSelected());
+					User user = new User(nicknameField.getText(), passwordField.getText(), nameField.getText(), surnameField.getText(), Integer.parseInt(ageField.getText()), emailField.getText(), chckbxPremium.isSelected(), txtCountryfield.getText());
 					for(String hobby : txtpnHobbiesfield.getText().split("\\r?\\n")) {
 						user.addHobby(hobby);
 					}
