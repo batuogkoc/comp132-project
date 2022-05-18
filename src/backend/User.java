@@ -379,4 +379,9 @@ public class User implements Comparable<User>, ContentContainer, HobbyContainer{
 	public TreeSet<Content> getContents() {
 		return contents;
 	}
+
+	public void setHobbies(TreeSet<String> hobbies) {
+		this.hobbies = hobbies;
+	}
+	
 }

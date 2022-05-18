@@ -22,7 +22,9 @@ import javax.swing.JComponent;
 import backend.*;
 import mvc.*;
 import java.awt.event.ActionListener;
+import java.util.TreeSet;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextPane;
 
 /**
  * profile page of a user. Has different different forms depending on who is viewing whose page (viewing your page, viewing the page of someone you follow, viewing the page of someone you don't follow)
@@ -34,6 +36,9 @@ public class ProfilePage extends JPanel {
 	private JTextField surnameField;
 	private JTextField nicknameField;
 	private JPanel dynamicPanel; //the part of the page that changes according to whose page is being viewed by whom
+	private JTextField countryfield;
+	private JPanel hobbiesPanel;
+	private JTextPane hobbiesEditPane;
 
 	/**
 	 * generate the GUI 
@@ -67,9 +72,9 @@ public class ProfilePage extends JPanel {
 		add(infoPanel, gbc_infoPanel);
 		GridBagLayout gbl_infoPanel = new GridBagLayout();
 		gbl_infoPanel.columnWidths = new int[] {0, 0};
-		gbl_infoPanel.rowHeights = new int[] {0, 0, 0, 0};
+		gbl_infoPanel.rowHeights = new int[] {0, 0, 0, 0, 0, 0};
 		gbl_infoPanel.columnWeights = new double[]{0.0, 1.0};
-		gbl_infoPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0};
+		gbl_infoPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
 		infoPanel.setLayout(gbl_infoPanel);
 		
 		JLabel lblName = new JLabel("Name: ");
@@ -127,19 +132,53 @@ public class ProfilePage extends JPanel {
 		infoPanel.add(nicknameField, gbc_nicknameField);
 		nicknameField.setColumns(10);
 		
+		JLabel lblCountry = new JLabel("Country:");
+		GridBagConstraints gbc_lblCountry = new GridBagConstraints();
+		gbc_lblCountry.anchor = GridBagConstraints.EAST;
+		gbc_lblCountry.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCountry.gridx = 0;
+		gbc_lblCountry.gridy = 3;
+		infoPanel.add(lblCountry, gbc_lblCountry);
+		
+		countryfield = new JTextField();
+		countryfield.setEditable(false);
+		GridBagConstraints gbc_countryfield = new GridBagConstraints();
+		gbc_countryfield.insets = new Insets(0, 0, 5, 0);
+		gbc_countryfield.fill = GridBagConstraints.HORIZONTAL;
+		gbc_countryfield.gridx = 1;
+		gbc_countryfield.gridy = 3;
+		infoPanel.add(countryfield, gbc_countryfield);
+		countryfield.setColumns(10);
+		
+		JLabel lblHobbies = new JLabel("Hobbies:");
+		GridBagConstraints gbc_lblHobbies = new GridBagConstraints();
+		gbc_lblHobbies.insets = new Insets(0, 0, 5, 5);
+		gbc_lblHobbies.gridx = 0;
+		gbc_lblHobbies.gridy = 4;
+		infoPanel.add(lblHobbies, gbc_lblHobbies);
+		
+		hobbiesPanel = new JPanel();
+		GridBagConstraints gbc_hobbiesPanel = new GridBagConstraints();
+		gbc_hobbiesPanel.insets = new Insets(0, 0, 5, 0);
+		gbc_hobbiesPanel.fill = GridBagConstraints.BOTH;
+		gbc_hobbiesPanel.gridx = 1;
+		gbc_hobbiesPanel.gridy = 4;
+		hobbiesPanel.setLayout(new GridLayout(1,1));
+		infoPanel.add(hobbiesPanel, gbc_hobbiesPanel);
+		
 		JLabel lblAccount = new JLabel("Account:");
 		GridBagConstraints gbc_lblAccount = new GridBagConstraints();
 		gbc_lblAccount.anchor = GridBagConstraints.EAST;
 		gbc_lblAccount.insets = new Insets(0, 0, 0, 5);
 		gbc_lblAccount.gridx = 0;
-		gbc_lblAccount.gridy = 3;
+		gbc_lblAccount.gridy = 5;
 		infoPanel.add(lblAccount, gbc_lblAccount);
 		
 		String[] accountTypes = {"Regular", "Premium"};
 		JComboBox accountTypeCombo = new JComboBox(accountTypes); //show wheter or not the account is premium
 		GridBagConstraints gbc_accountTypeCombo = new GridBagConstraints();
 		gbc_accountTypeCombo.gridx = 1;
-		gbc_accountTypeCombo.gridy = 3;
+		gbc_accountTypeCombo.gridy = 5;
 		infoPanel.add(accountTypeCombo, gbc_accountTypeCombo);
 		
 		JPanel controlPanel = new JPanel();
@@ -290,6 +329,9 @@ public class ProfilePage extends JPanel {
 		nameField.setText(viewedUser.getName()); //set the user name field
 		surnameField.setText(viewedUser.getSurname()); //set the surname field
 		nicknameField.setText(viewedUser.getNickname());//set the nickname field
+		countryfield.setText(viewedUser.getCountry()); //set the country field
+		System.out.println(viewedUser.getHobbies());
+		setHobbiesPanelContents(new HobbiesPanel(viewedUser.getHobbies())); //show the hobbies
 		accountTypeCombo.setSelectedIndex(viewedUser.isPremium()?1:0);//set the account type field
 			
 		
@@ -332,6 +374,15 @@ public class ProfilePage extends JPanel {
 					nameField.setEditable(true);
 					surnameField.setEditable(true);
 					accountTypeCombo.setEditable(true);
+					countryfield.setEditable(true);
+					String s = new String();
+					for (String string : viewedUser.getHobbies()) {
+						s = s+string+"\n";
+					}
+					hobbiesEditPane = new JTextPane();
+					System.out.println(s);
+					hobbiesEditPane.setText(s);
+					setHobbiesPanelContents(hobbiesEditPane);
 					//another click of the button will save the changes now
 				}
 				else{
@@ -342,16 +393,16 @@ public class ProfilePage extends JPanel {
 					viewedUser.setName(nameField.getText());
 					viewedUser.setSurname(surnameField.getText());
 					viewedUser.setPremium(accountTypeCombo.getSelectedIndex()==0?false:true);
+					viewedUser.setCountry(countryfield.getText());
+					TreeSet<String> hobbies = new TreeSet<>();
+					for(String hobby : hobbiesEditPane.getText().split("\\n?\\r")) {
+						if(!hobby.equals(""))
+							hobbies.add(hobby);
+					}
+					System.out.println(hobbies);
+					viewedUser.setHobbies(hobbies);
 
-					//disavle the editing of the fields
-					nameField.setEditable(false);
-					surnameField.setEditable(false);
-					accountTypeCombo.setEditable(false);
-					
-					//display the updated fields of the user
-					nameField.setText(viewedUser.getName());
-					surnameField.setText(viewedUser.getSurname());
-					accountTypeCombo.setSelectedIndex(viewedUser.isPremium()?1:0);
+					Controller.sendEvent("PROFILE PAGE");//redraw the page after changes occur
 				}
 			}
 		});
@@ -461,6 +512,18 @@ public class ProfilePage extends JPanel {
 		dynamicPanel.add(component);
 		dynamicPanel.validate();
 		dynamicPanel.repaint();
+	}
+
+	/**
+	 * set the contents of the hobbies panel to the component given. Needed when displaying or editing hobbies
+	 * @param component component to set the contents of the hobbies panel to
+	 */
+	private void setHobbiesPanelContents(JComponent component) {
+		hobbiesPanel.removeAll();
+		hobbiesPanel.setLayout(new GridLayout(1, 1, 0, 0));
+		hobbiesPanel.add(component);
+		hobbiesPanel.validate();
+		hobbiesPanel.repaint();
 	}
 
 }
