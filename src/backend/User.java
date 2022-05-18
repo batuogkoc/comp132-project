@@ -82,6 +82,16 @@ public class User implements Comparable<User>, ContentContainer{
 		return ret;
 	}
 	
+	public static ArrayList<User> searchUsers(String keyword) {
+		ArrayList<User> usersTemp = new ArrayList<User>();
+		for (User user : users.values()) {
+			if(user.nickname.contains(keyword)) {
+				usersTemp.add(user);
+			}
+		}
+		return usersTemp;
+	}
+
 	public double getLikeness(User user) {
 		double ret = 0;
 		for (String hobbyThis : this.hobbies) {

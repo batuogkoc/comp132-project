@@ -29,6 +29,15 @@ public class Group implements ContentContainer{
 	public static HashMap<String, Group> getGroups() {
 		return groups;
 	}
+	public static ArrayList<Group> searchGroups(String keyword) {
+		ArrayList<Group> groupsTemp = new ArrayList<Group>();
+		for (Group group : groups.values()) {
+			if(group.name.contains(keyword)) {
+				groupsTemp.add(group);
+			}
+		}
+		return groupsTemp;
+	}
 
 	@Override
 	public boolean removeContent(Content content) {
