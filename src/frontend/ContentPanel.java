@@ -9,8 +9,16 @@ import javax.swing.*;
 import backend.*;
 import mvc.Controller;
 import mvc.Model;
-
+/**
+ * panel to display a singular content. Clicking on it will take you to the edit page of the content if you are its owner
+ * @author batu
+ *
+ */
 public class ContentPanel extends JPanel{
+	/**
+	 * constructor.
+	 * @param content content to be displayed
+	 */
 	public ContentPanel(Content content) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		User author = content.getAuthor();
@@ -27,8 +35,8 @@ public class ContentPanel extends JPanel{
 			@Override
 			public void mouseClicked(MouseEvent me) {
 				if(Model.getCurrentUser() == content.getAuthor()) {
-					Model.setContentOfInterest(content);
-					Controller.sendEvent("CONTENT EDIT");
+					Model.setContentOfInterest(content); //set the content to be edited as the current content
+					Controller.sendEvent("CONTENT EDIT"); //tell the controller to show the content edit menu
 				}
 			}
 		};
@@ -41,7 +49,8 @@ public class ContentPanel extends JPanel{
 		add(text);
 		text.addMouseListener(ma);
 		text.setAlignmentX(LEFT_ALIGNMENT);
-
+		
+		//try to add picture
 		try {
 			ImageIcon image = new ImageIcon(content.getImagePath());
 			float aspectRatio = image.getIconWidth()/image.getIconHeight();
@@ -49,6 +58,7 @@ public class ContentPanel extends JPanel{
 			add(imageLabel);
 			imageLabel.addMouseListener(ma);
 			imageLabel.setAlignmentX(LEFT_ALIGNMENT);
+			//resize the image to horizontally fill the screen but preserve its aspect ratio whenever the panel gets resized.
 			addComponentListener(new ComponentAdapter() {
 				public void componentResized(ComponentEvent e) {
 					imageLabel.setIcon(new ImageIcon(image.getImage().getScaledInstance(getWidth(), (int)((float)getWidth()/aspectRatio), Image.SCALE_DEFAULT)));
@@ -56,7 +66,7 @@ public class ContentPanel extends JPanel{
 			});
 		}
 		catch(Exception e){
-			System.out.println(e);
+			System.err.println(e); //if there is an error, print it in the error out
 		}
 		setBorder(BorderFactory.createLineBorder(Color.black));
 	}

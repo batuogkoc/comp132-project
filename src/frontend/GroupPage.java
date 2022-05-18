@@ -9,12 +9,18 @@ import java.awt.event.*;
 import java.beans.beancontext.BeanContextMembershipListener;
 import java.util.Iterator;
 
+/**
+ * display the page of a group.
+ * takes in the viewing user and shows them 3 different views depending if they are a member, non-member and creator of the group.
+ * @author batu
+ *
+ */
 public class GroupPage extends JPanel {
 	private JTextField txtNamefield;
 	private JTextField txtCountryfield;
 	private JTextField txtCreatorfield;
-	private boolean removingMembers = false;
-	private JComboBox memberRemovalComboBox;
+	private boolean removingMembers = false; //whether delete member mode is on
+	private JComboBox memberRemovalComboBox; //the combobox that allows the user to select who to delete
 
 	/**
 	 * Create the panel.
@@ -177,42 +183,53 @@ public class GroupPage extends JPanel {
 		memberPanel.add(contentsPanel, gbc_contentsPanel);
 		contentsPanel.setLayout(new GridLayout(1, 1, 0, 0));
 		
-		hobbiesPanel.add(new HobbiesPanel(group.getHobbies()));
-		txtNamefield.setText(group.getName());
-		txtCountryfield.setText(group.getCountry());
+		//set the fields that contain user-independent fields like group name, country and hobbies.
+		hobbiesPanel.add(new HobbiesPanel(group.getHobbies())); //add a hobbies panel that displays the hobbies of the group into the relevant panel
+		txtNamefield.setText(group.getName());//set the field that displays the name of the group
+		txtCountryfield.setText(group.getCountry());//set the field that displays the country of origin of the group
+		
+		//set the fields that hold user-dependant controls. These controls are displayed on the dynamic panel
 		if(group.getMembers().contains(viewingUser)) {
+			//if user is a member
 			CardLayout l = (CardLayout)dynamicPanel.getLayout();
-			l.show(dynamicPanel, "name_23002355336325");		
-			txtCreatorfield.setText(group.getGroupCreator().toString());
-			membersPanel.add(new UsersPanel(group.getMembers()));
-			contentsPanel.add(new ContentsPanel(group.getContents()));
+			l.show(dynamicPanel, "name_23002355336325");//show member view in the dynamic panel
+			txtCreatorfield.setText(group.getGroupCreator().toString()); //show the creator of the group
+			membersPanel.add(new UsersPanel(group.getMembers())); //add a usersPanel displaying the members of the group.
+			contentsPanel.add(new ContentsPanel(group.getContents())); //add a contentspanel displaying the contents of the group
 			if(group.isCreator(viewingUser)) {
+				//if viweing user is the creator, turn the leave button into a delete button.
 				btnLeave.setText("Delete Group");
-				btnRemoveMembers.setEnabled(true);
+				btnRemoveMembers.setEnabled(true); //enable the remove member utility button
 			}
 			else {
+				//if viweing user isn't the creator, leave button makes them leave
 				btnLeave.setText("Leave");
-				btnRemoveMembers.setEnabled(false);
+				btnRemoveMembers.setEnabled(false); //disable the remove member utility button
 			}
 		}
 		else {
+			//if user isn't a member, show non-member view (only join button)
 			CardLayout l = (CardLayout)dynamicPanel.getLayout();
 			l.show(dynamicPanel, "name_22987395406545");
 		}
 		
+		//if join button is pressed, prompt the user again to see if they are sure. If so, add them to the group and redraw the group page so as to update the view
 		btnJoin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Join group?", "Joining Group", JOptionPane.YES_NO_OPTION);
+				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Join group?", "Joining Group", JOptionPane.YES_NO_OPTION);//ask again if they are sure
 				if(r == JOptionPane.YES_OPTION) {
-					viewingUser.joinGroup(group);
-					Model.setGroupOfInterest(group);
+					viewingUser.joinGroup(group);//add the user to group
+					Model.setGroupOfInterest(group);//redraw the group
 					Controller.sendEvent("GROUP");
 				}
 			}
 		});
+		
+		//leave button asks user if they are sure, if so makes them leave the group. If the user is the creator, the button deletes the group instead
 		btnLeave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(group.isCreator(viewingUser)) {
+					//if user is the creator, delete the group and go to home page
 					int r = JOptionPane.showConfirmDialog(View.getFrame(), "Delete group?", "Deleting Group", JOptionPane.YES_NO_OPTION);
 					if(r == JOptionPane.YES_OPTION) {
 						group.deleteGroup();
@@ -221,6 +238,7 @@ public class GroupPage extends JPanel {
 					}
 				}
 				else {
+					//if user isn't the creator, leave the group and redraw the group page so as to reflec the changes.
 					int r = JOptionPane.showConfirmDialog(View.getFrame(), "Leave group?", "Leaving Group", JOptionPane.YES_NO_OPTION);
 					if(r == JOptionPane.YES_OPTION) {
 						viewingUser.leaveGroup(group);
@@ -231,18 +249,20 @@ public class GroupPage extends JPanel {
 				
 			}
 		});
+		
+		//remove member button exclusive to the creator of group. When pressed, shows a combobox with the names of all the users. removes the selected user when clicked again
 		btnRemoveMembers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(removingMembers) {
+					//if button has been pressed before, means user selected someone to remove. Remove the user if the selected user isn't the creator.
 					removingMembers = false;
-					if(memberRemovalComboBox.getSelectedIndex() != 0) {
-//						User userToRemove;
+					if(memberRemovalComboBox.getSelectedIndex() != 0) { //if selected index is zero, user has selected the cancel option
 						Iterator<User> it = group.getMembers().iterator();
 						for (int i = 1; it.hasNext(); i++) {
 							User user = it.next();
 							if(memberRemovalComboBox.getSelectedIndex() == i) {
 								if(user == group.getGroupCreator()) {
-									JOptionPane.showConfirmDialog(View.getFrame(), "Cannot remove yourself, try deleting the group.", "Error", JOptionPane.DEFAULT_OPTION);
+									JOptionPane.showConfirmDialog(View.getFrame(), "Cannot remove yourself, try deleting the group.", "Error", JOptionPane.DEFAULT_OPTION);//creator cant be removed
 									break;
 								}
 								int a = JOptionPane.showConfirmDialog(View.getFrame(), "Remove "+user.toString(), "Removing user", JOptionPane.YES_NO_OPTION);
@@ -253,24 +273,25 @@ public class GroupPage extends JPanel {
 							}
 						}
 					}
-					Model.setGroupOfInterest(group);
+					Model.setGroupOfInterest(group); //redraw the group page so as to reflect the changes.
 					Controller.sendEvent("GROUP");
 				}
 				else {
+					//if the removing behavior has just been requested. Adds the user removal combobox and changes the remove button to a confirm button
 					removingMembers = true;
 					String[] comboboxItems = new String[group.getMembers().size()+1];
-					comboboxItems[0] = "Cancel";
+					comboboxItems[0] = "Cancel"; //first element of the combobox is the cancel option
 					Iterator<User> it = group.getMembers().iterator();
 					for (int i = 1; it.hasNext(); i++) {
-						comboboxItems[i] = (it.next().getNickname());
+						comboboxItems[i] = (it.next().getNickname());//create string full of combobox options
 					}
 					memberRemovalComboBox = new JComboBox(comboboxItems);
-					memberRemovalPanel.add(memberRemovalComboBox);
+					memberRemovalPanel.add(memberRemovalComboBox); //add combobox to the relevant panel
 					membersPanel.removeAll();
-					membersPanel.add(new UsersPanel(group.getMembers()));
+					membersPanel.add(new UsersPanel(group.getMembers()));//redraw the members list
 					membersPanel.validate();
 					membersPanel.repaint();
-					btnRemoveMembers.setText("Done");
+					btnRemoveMembers.setText("Done"); //change the text of the removal button from "Remove User" to "Done"
 				}
 			}
 		});

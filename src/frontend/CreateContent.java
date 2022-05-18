@@ -1,42 +1,40 @@
 package frontend;
 
-import javax.swing.JPanel;
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JTextPane;
-
-import backend.User;
-
-import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
-import java.awt.event.ActionListener;
-import java.security.InvalidAlgorithmParameterException;
-import java.util.Iterator;
-import java.awt.event.ActionEvent;
-import java.awt.GridLayout;
-
-import backend.*;
-import mvc.*;
+import backend.Content;
+import backend.Group;
+import backend.User;
+import mvc.Controller;
+import mvc.Model;
+import mvc.View;
 
 public class CreateContent extends JPanel {
 	private JTextField txtTitlefield;
-	private JPanel imagePanel;
-	private String picturePath = "";
-	private JFileChooser fileChooser;
+	private JPanel imagePanel; //panel that holds the picture
+	private String picturePath = ""; //path to picture. "" means no picture
+	private JFileChooser fileChooser; //filechooser is a filed because it retains the last opened directory this way.
 
 	/**
-	 * Create the panel.
+	 * Create the panel that holds the gui for content creation.
 	 */
-	public CreateContent() {
+	public CreateContent(User viewingUser) {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] {0, 0, 0};
 		gridBagLayout.rowHeights = new int[] {0, 0};
@@ -109,14 +107,15 @@ public class CreateContent extends JPanel {
 		gbc_lblDestination.gridy = 2;
 		dataPanel.add(lblDestination, gbc_lblDestination);
 		
-		String[] comboBoxItems= new String[1+Model.getCurrentUser().getJoinedGroups().size()];
+		//create a string array to store possible destinations for the content. these are the user's own account and the groups they are in.
+		String[] comboBoxItems= new String[1+viewingUser.getJoinedGroups().size()];
 		comboBoxItems[0] = "Your account";
-		Iterator<Group> it = Model.getCurrentUser().getJoinedGroups().iterator();
+		Iterator<Group> it = viewingUser.getJoinedGroups().iterator();
 		int i = 1;
 		while (it.hasNext()) {
 			comboBoxItems[i++] = it.next().getName() + " (Group)";	
 		}
-		JComboBox comboBox = new JComboBox(comboBoxItems);
+		JComboBox comboBox = new JComboBox(comboBoxItems); //create a combobox with this array
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 0, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -144,8 +143,10 @@ public class CreateContent extends JPanel {
 		gbc_btnCreate.gridy = 1;
 		add(btnCreate, gbc_btnCreate);
 		
-		displayPicture(picturePath);
-		fileChooser = new JFileChooser(".");
+		displayPicture(picturePath); //display the picture. This is initialised as "" which is no image.
+		fileChooser = new JFileChooser("."); //initialise the fileChooser object
+		
+		//change picture button event. Updates the image path
 		btnChangePicture.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int result = fileChooser.showOpenDialog(null);
@@ -153,44 +154,49 @@ public class CreateContent extends JPanel {
 					picturePath = fileChooser.getSelectedFile().getAbsolutePath();
 				}
 				else {
-					picturePath = "";
+					picturePath = "";//cancelling file choose sets the image as none
 				}
-				displayPicture(picturePath);
+				displayPicture(picturePath); //display new image
 			}
 		});
+		
+		//create content button. Creates the content using the data in the fields and adds it to the destination pointed to by the combobox index
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
 					if(comboBox.getSelectedIndex() == 0) {
-						Model.getCurrentUser().addContent(new Content(Model.getCurrentUser(), Model.getCurrentUser(), txtTitlefield.getText(), txtTextfield.getText(), picturePath));
-						Controller.sendEvent("HOME PAGE");
+						Content content = new Content(viewingUser, viewingUser, txtTitlefield.getText(), txtTextfield.getText(), picturePath); //create content and specify destination. Constructor automatically adds the content to the destination's container
+						Controller.sendEvent("HOME PAGE"); //return to home after it is done
 					}
 					else {
-						Iterator<Group> it = Model.getCurrentUser().getJoinedGroups().iterator();
+						Iterator<Group> it = viewingUser.getJoinedGroups().iterator();
 						int i = 0;
 						while(it.hasNext()) {
 							Group group = it.next();
 							if(++i==comboBox.getSelectedIndex()) {
-								group.addContent(new Content(group, Model.getCurrentUser(), txtTitlefield.getText(), txtTextfield.getText(), picturePath));
-								Model.setGroupOfInterest(group);
+								Content content = new Content(group, viewingUser, txtTitlefield.getText(), txtTextfield.getText(), picturePath); //create content and specify destination. Constructor automatically adds the content to the destination's container
+								Model.setGroupOfInterest(group); //show the group the content has been added to
 								Controller.sendEvent("GROUP");
 							}
 						}
 					}
 				}
 				catch (IllegalArgumentException e) {
-					JOptionPane.showConfirmDialog(View.getFrame(), e.getMessage(), "Error", JOptionPane.DEFAULT_OPTION);
+					JOptionPane.showConfirmDialog(View.getFrame(), e.getMessage(), "Error", JOptionPane.DEFAULT_OPTION); //if constructor throws IllegalArgumentException, create a popup that informs the user of their error.
 				}
 			}
 		});
 	}
-	
+	/**
+	 * adds the picture at the picturePath to the relevant panel (imagePanel)
+	 * @param picturePath path to picture
+	 */
 	private void displayPicture(String picturePath) {
 		imagePanel.removeAll();
 		if(picturePath == "")
-			imagePanel.add(new JLabel("No picture"));
+			imagePanel.add(new JLabel("No picture")); //if no picture is selected, show a label that indicates that no picture is selected
 		else
-			imagePanel.add(new ResizableImage(new ImageIcon(picturePath)));
+			imagePanel.add(new ResizableImage(new ImageIcon(picturePath))); //add a resizableImage object to the relevant panel
 		imagePanel.validate();
 		imagePanel.repaint();
 	}

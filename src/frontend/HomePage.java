@@ -10,7 +10,6 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import backend.*;
-import mvc.*;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.awt.GridBagLayout;
@@ -18,12 +17,18 @@ import java.awt.GridBagLayoutInfo;
 
 import javax.swing.JButton;
 import java.awt.Insets;
+/**
+ * Home Page of the application. Has a search bar that allows a user to sarch groups and other users, and a contents panel that displays the contents the user's groups and friends posted.
+ * @author batu
+ *
+ */
 public class HomePage extends JPanel {
 	private JTextField txtSearch;
 	private JPanel dynamicPanel;
 
 	/**
-	 * Create the panel.
+	 * create the home page panel of the viewing user
+	 * @param viewingUser the user that is currently logged in.
 	 */
 	public HomePage(User viewingUser) {
 		setLayout(new BorderLayout(0, 0));
@@ -37,6 +42,7 @@ public class HomePage extends JPanel {
 		txtSearch = new JTextField();
 		add(txtSearch, BorderLayout.NORTH);
 		txtSearch.setColumns(10);
+		//search bar. Updates the located items as the user types every letter.
 		txtSearch.getDocument().addDocumentListener(new DocumentListener() {
 			
 			@Override
@@ -55,9 +61,10 @@ public class HomePage extends JPanel {
 			}
 			public void update() {
 				if(txtSearch.getText().equals("")) {
-					setDynamicPanelContents(new ContentsPanel(viewingUser.getReceivedContents()));
+					setDynamicPanelContents(new ContentsPanel(viewingUser.getReceivedContents())); // if the search bar is empty, display the contents
 				}
 				else {
+					//if there is a keyword being searched for, first display the located users then the groups
 					JPanel searchResultsPanel = new JPanel();
 					searchResultsPanel.setLayout(new GridBagLayout());
 					GridBagConstraints gbc = new GridBagConstraints();
@@ -81,11 +88,15 @@ public class HomePage extends JPanel {
 					gbc.weighty =1.0;
 					gbc.fill = GridBagConstraints.BOTH;
 					searchResultsPanel.add(new GroupsPanel(Group.searchGroups(txtSearch.getText())),gbc);
-					setDynamicPanelContents(searchResultsPanel);
+					setDynamicPanelContents(searchResultsPanel); //update the dynamicPanel
 				}
 			}
 		});
 	}
+	/**
+	 * clear the dynamic panel(the one that either shows search results or contens depeding on the search bar contents) and add the provided component
+	 * @param component component to be added to the dynamic panel
+	 */
 	private void setDynamicPanelContents(JComponent component) {
 		dynamicPanel.removeAll();
 		dynamicPanel.add(component);

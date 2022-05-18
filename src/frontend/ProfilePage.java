@@ -24,14 +24,21 @@ import mvc.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * profile page of a user. Has different different forms depending on who is viewing whose page (viewing your page, viewing the page of someone you follow, viewing the page of someone you don't follow)
+ * @author batu
+ *
+ */
 public class ProfilePage extends JPanel {
 	private JTextField nameField;
 	private JTextField surnameField;
 	private JTextField nicknameField;
-	private JPanel dynamicPanel;
+	private JPanel dynamicPanel; //the part of the page that changes according to whose page is being viewed by whom
 
 	/**
-	 * Create the panel.
+	 * generate the GUI 
+	 * @param viewingUser the user that is viewing the page (currently logged in user)
+	 * @param viewedUser the user whose page is being viewed
 	 */
 	public ProfilePage(User viewingUser, User viewedUser) {
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -129,7 +136,7 @@ public class ProfilePage extends JPanel {
 		infoPanel.add(lblAccount, gbc_lblAccount);
 		
 		String[] accountTypes = {"Regular", "Premium"};
-		JComboBox accountTypeCombo = new JComboBox(accountTypes);
+		JComboBox accountTypeCombo = new JComboBox(accountTypes); //show wheter or not the account is premium
 		GridBagConstraints gbc_accountTypeCombo = new GridBagConstraints();
 		gbc_accountTypeCombo.gridx = 1;
 		gbc_accountTypeCombo.gridy = 3;
@@ -225,12 +232,12 @@ public class ProfilePage extends JPanel {
 		gbl_followedProfile.rowWeights = new double[]{0.0, 0.0};
 		followedProfile.setLayout(gbl_followedProfile);
 		
-		JButton btnUnfollow_1 = new JButton("Unfollow");
-		GridBagConstraints gbc_btnUnfollow_1 = new GridBagConstraints();
-		gbc_btnUnfollow_1.insets = new Insets(0, 0, 5, 5);
-		gbc_btnUnfollow_1.gridx = 0;
-		gbc_btnUnfollow_1.gridy = 0;
-		followedProfile.add(btnUnfollow_1, gbc_btnUnfollow_1);
+		JButton btnUnfollow = new JButton("Unfollow");
+		GridBagConstraints gbc_btnUnfollow = new GridBagConstraints();
+		gbc_btnUnfollow.insets = new Insets(0, 0, 5, 5);
+		gbc_btnUnfollow.gridx = 0;
+		gbc_btnUnfollow.gridy = 0;
+		followedProfile.add(btnUnfollow, gbc_btnUnfollow);
 		
 		JButton btnFriends_1 = new JButton("Friends");
 		GridBagConstraints gbc_btnFriends_1 = new GridBagConstraints();
@@ -278,70 +285,91 @@ public class ProfilePage extends JPanel {
 		add(dynamicPanel, gbc_dynamicPanel);
 		dynamicPanel.setLayout(new GridLayout(1, 1));
 		
-		imagePanel.add(new ResizableImage(new ImageIcon(viewedUser.getProfilePicturePath())));
-		nameField.setText(viewedUser.getName());
-		surnameField.setText(viewedUser.getSurname());
-		nicknameField.setText(viewedUser.getNickname());
-		accountTypeCombo.setSelectedIndex(viewedUser.isPremium()?1:0);
+		//initialise the parts of the page that are constant regardless of who is viewing them
+		imagePanel.add(new ResizableImage(new ImageIcon(viewedUser.getProfilePicturePath()))); //add the profile picture to the relevant panel
+		nameField.setText(viewedUser.getName()); //set the user name field
+		surnameField.setText(viewedUser.getSurname()); //set the surname field
+		nicknameField.setText(viewedUser.getNickname());//set the nickname field
+		accountTypeCombo.setSelectedIndex(viewedUser.isPremium()?1:0);//set the account type field
 			
 		
 		if(viewingUser == viewedUser) {
-			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26374192294213");
-			setDynamicPanelContents(new ContentsPanel(viewedUser.getContents()));
-			btnCreateGroup.setEnabled(viewedUser.isPremium());
+			//if viewing your own profile
+			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26374192294213");//show the relevant buttons for when you are viewing your own account
+			setDynamicPanelContents(new ContentsPanel(viewedUser.getContents())); //add your contents to the dynamic panel
+			btnCreateGroup.setEnabled(viewedUser.isPremium()); //enable the group creation button is the user is premium
 		}
 		else if (viewingUser.getFollowedUsers().contains(viewedUser)) {
-			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26455931790925");
-			setDynamicPanelContents(new ContentsPanel(viewedUser.getContents()));
+			//if viewing a user you follow
+			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26455931790925");//show the relevant buttons for when you are viewing a user you follow
+			setDynamicPanelContents(new ContentsPanel(viewedUser.getContents()));//show the contents of the user you are viewing
 		}
 		else {
-			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26836584180790");
+			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26836584180790");//show the relevant buttons for when you are viewing a user you don't follow
 		}
 		
+		//show the contents of the user being viewed
 		btnContents.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setDynamicPanelContents(new ContentsPanel(viewedUser.getContents()));
 			}
 		});
+		
+		//show the groups the user is a part of (viewedUser == viewingUser)
 		btnGroups.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setDynamicPanelContents(new GroupsPanel(viewingUser.getJoinedGroups()));
 			}
 		});
+		
+		//allow the user to edit their account
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(btnEdit.getText().equals("Edit")) {
+					//If the edit hasn't begun yet
 					btnEdit.setText("Done");
+					//allow the fields to be edited
 					nameField.setEditable(true);
 					surnameField.setEditable(true);
 					accountTypeCombo.setEditable(true);
+					//another click of the button will save the changes now
 				}
 				else{
+					//if the edit is being saved
 					btnEdit.setText("Edit");
+					
+					//update user's fields
 					viewedUser.setName(nameField.getText());
 					viewedUser.setSurname(surnameField.getText());
 					viewedUser.setPremium(accountTypeCombo.getSelectedIndex()==0?false:true);
 
+					//disavle the editing of the fields
 					nameField.setEditable(false);
 					surnameField.setEditable(false);
 					accountTypeCombo.setEditable(false);
+					
+					//display the updated fields of the user
 					nameField.setText(viewedUser.getName());
 					surnameField.setText(viewedUser.getSurname());
 					accountTypeCombo.setSelectedIndex(viewedUser.isPremium()?1:0);
 				}
 			}
 		});
+		
+		//log out of account and take user to the login menu
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int a = JOptionPane.showConfirmDialog(View.getFrame(), "Are you sure you want to log out?", "Logging out", JOptionPane.YES_NO_OPTION);
+				int a = JOptionPane.showConfirmDialog(View.getFrame(), "Are you sure you want to log out?", "Logging out", JOptionPane.YES_NO_OPTION); //ask if user is sure
 				if(a == JOptionPane.YES_OPTION) {
 					Controller.sendEvent("LOGIN");
 				}
 			}
 		});
+		
+		//delete account
 		btnDeleteAccount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int a = JOptionPane.showConfirmDialog(View.getFrame(), "Are you sure you want to delete your account?", "Deleting account", JOptionPane.YES_NO_OPTION);
+				int a = JOptionPane.showConfirmDialog(View.getFrame(), "Are you sure you want to delete your account?", "Deleting account", JOptionPane.YES_NO_OPTION); //ask if user is sure
 				if(a == JOptionPane.YES_OPTION) {
 					viewedUser.deleteUser();
 					Controller.sendEvent("LOGIN");
@@ -349,33 +377,41 @@ public class ProfilePage extends JPanel {
 			}
 		});
 		
+		//show the friends of the currently logged in user
 		btnFriends.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setDynamicPanelContents(new UsersPanel(viewingUser.getFollowedUsers()));
 			}
 		});
+		
+		//display a list of closest to most distant suggested users
 		btnSuggestUsers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setDynamicPanelContents(new UsersPanel(viewingUser.recommendUsers()));
 			}
 		});
+		
+		//display a list of closest to most distant suggested groups
 		btnSuggestGroups.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setDynamicPanelContents(new GroupsPanel(viewingUser.recommendGroups()));
 			}
 		});
 		
+		//follow the user being viewed
 		btnFollow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Follow user?", "Following user", JOptionPane.YES_NO_OPTION);
+				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Follow user?", "Following user", JOptionPane.YES_NO_OPTION); //ask if the user is sure
 				if(r == JOptionPane.YES_OPTION) {
 					viewingUser.followUser(viewedUser);
 					Model.setUserOfInterest(viewedUser);
-					Controller.sendEvent("OTHER USER");
+					Controller.sendEvent("OTHER USER");//redraw the profile page of the user that has just been followed
 				}
 			}
 		});
-		btnUnfollow_1.addActionListener(new ActionListener() {
+		
+		//unfollow the user being viewed
+		btnUnfollow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Unfollow user?", "Unfollowing user", JOptionPane.YES_NO_OPTION);
 				if(r == JOptionPane.YES_OPTION) {
@@ -385,23 +421,30 @@ public class ProfilePage extends JPanel {
 				}
 			}
 		});
+		
+		//show the contents posted by the user being viewed
 		btnContents_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setDynamicPanelContents(new ContentsPanel(viewedUser.getContents()));
 			}
 		});
+		
+		//show the friends of the user being displayed (when the user is viewing the profile of someone they follow)
 		btnFriends_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setDynamicPanelContents(new UsersPanel(viewedUser.getFollowedUsers()));
 
 			}
 		});
+		
+		//show the groups the viewed user is a member of
 		btnGroups_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setDynamicPanelContents(new GroupsPanel(viewedUser.getJoinedGroups()));
 			}
 		});	
 		
+		//show the new group creation menu
 		btnCreateGroup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Controller.sendEvent("CREATE GROUP");
@@ -409,6 +452,10 @@ public class ProfilePage extends JPanel {
 		});
 	}
 	
+	/**
+	 * set the contents of the dynamic panel to the component givem
+	 * @param component component to set the contents of the dynamic panel to
+	 */
 	private void setDynamicPanelContents(JComponent component) {
 		dynamicPanel.removeAll();
 		dynamicPanel.add(component);

@@ -23,6 +23,11 @@ import javax.print.attribute.UnmodifiableSetException;
 import javax.swing.*;
 import mvc.*;
 
+/**
+ * new user creation page
+ * @author batu
+ *
+ */
 public class NewUser extends JPanel {
 	private JTextField nameField;
 	private JTextField surnameField;
@@ -30,8 +35,8 @@ public class NewUser extends JPanel {
 	private JTextField passwordField;
 	private JTextField ageField;
 	private JTextField emailField;
-	private String profilePicturePath = "";
-	private JPanel imagePanel;
+	private String profilePicturePath = ""; //profile picture path. "" means default profile picture
+	private JPanel imagePanel; //panel that displays the profile picture
 	private JFileChooser fileChooser = new JFileChooser(".");
 	private JTextField txtCountryfield;
 	/**
@@ -237,7 +242,9 @@ public class NewUser extends JPanel {
 		gbc_btnCreateNewUser.gridy = 1;
 		add(btnCreateNewUser, gbc_btnCreateNewUser);
 		
-		displayProfilePicture(profilePicturePath);
+		displayProfilePicture(profilePicturePath); // display the active profile picture. starts as default
+		
+		//clear all data fields
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				for (Component component : infoPanel.getComponents()) {
@@ -250,11 +257,15 @@ public class NewUser extends JPanel {
 				}
 			}
 		});
+		
+		//Take the user to the login menu
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Controller.sendEvent("LOGIN");
 			}
 		});
+		
+		//let the user choose a profile picture. If they cancel the operation the pp is set as default.
 		btnChooseProfilePicture.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int result = fileChooser.showOpenDialog(null);
@@ -267,6 +278,8 @@ public class NewUser extends JPanel {
 				displayProfilePicture(profilePicturePath);
 			}
 		});
+		
+		//validate the fields and create the new user
 		btnCreateNewUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
@@ -275,26 +288,29 @@ public class NewUser extends JPanel {
 						user.addHobby(hobby);
 					}
 					Model.setCurrentUser(user);
-					Controller.sendEvent("HOME PAGE");
+					Controller.sendEvent("HOME PAGE");//when the user is created, log them into their home page
 				}
 				catch(NumberFormatException e) {
-					JOptionPane.showConfirmDialog(View.getFrame(), "Age must be an integer", "Error", JOptionPane.DEFAULT_OPTION);
+					JOptionPane.showConfirmDialog(View.getFrame(), "Age must be an integer", "Error", JOptionPane.DEFAULT_OPTION); //warn user that the age was entered incorrectly
 				}
 				catch(IllegalArgumentException e) {
-					JOptionPane.showConfirmDialog(View.getFrame(), e.getMessage(), "Error", JOptionPane.DEFAULT_OPTION);
+					JOptionPane.showConfirmDialog(View.getFrame(), e.getMessage(), "Error", JOptionPane.DEFAULT_OPTION); //warn the user if the fields were illegal
 				}
 			}
 		});
 		
 	}
-	
+	/**
+	 * adds the picture at the profilePicturePath to the relevant panel (imagePanel)
+	 * @param picturePath path to picture
+	 */
 	private void displayProfilePicture(String profilePicturePath) {
 		imagePanel.removeAll();
 		if(profilePicturePath == "")
-			profilePicturePath = User.getDefaultProfilePicturePath();
-		imagePanel.add(new ResizableImage(new ImageIcon(profilePicturePath)));
+			profilePicturePath = User.getDefaultProfilePicturePath();//if profilePicturePath is "" display default profile picture
+		imagePanel.add(new ResizableImage(new ImageIcon(profilePicturePath))); //add the resizable image into the imagePanel
 		imagePanel.validate();
-		imagePanel.repaint();
+		imagePanel.repaint(); //redraw the relevant panel
 	}
 
 }

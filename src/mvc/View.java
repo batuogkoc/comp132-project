@@ -46,25 +46,21 @@ public class View {
 			setFrameContents(new MainPage(new HomePage(Model.getCurrentUser()))); //Home page the user sees. has contents, and a search bar
 			break;
 		case "ADD CONTENT MENU":
-			setFrameContents(new MainPage(new CreateContent())); //new coıntent creation menu
+			setFrameContents(new MainPage(new CreateContent(Model.getCurrentUser()))); //new coıntent creation menu
 			break;
 		case "USER PROFILE":
-			setFrameContents(new MainPage(new ProfilePage(Model.getCurrentUser(), Model.getUserOfInterest()))); //viewing of user profile. Can be yours, an unfollowed user and a user you follow
+			setFrameContents(new MainPage(new ProfilePage(Model.getCurrentUser(), Model.getUserOfInterest()))); //viewing of a user's profile. Can be yours, an unfollowed user and a user you follow
 			break;
 		case "NEW ACCOUNT":
-			setFrameContents(new NewUser()); //new user generatiom
+			setFrameContents(new NewUser()); //new user generation page
 			break;
 			
 		case "GROUP":
-			setFrameContents(new MainPage(new GroupPage(Model.getGroupOfInterest(), Model.getCurrentUser()))); //viewing a group. It can be a group that you are a member of, creator of, or a group you aren't a part of.
-			break;
-			
-		case "GROUPS PAGE":
-			setFrameContents(new MainPage(new GroupsPanel(Model.getCurrentUser().getJoinedGroups()))); //DEPRECATED groups are now shown via the profile page of the user
+			setFrameContents(new MainPage(new GroupPage(Model.getGroupOfInterest(), Model.getCurrentUser()))); //viewing a group of interest set by the event thrower. It can be a group that you are a member of, creator of, or a group you aren't a part of.
 			break;
 			
 		case "CONTENT EDIT":
-			setFrameContents(new MainPage(new EditContent(Model.getContentOfInterest()))); //editing a content. This window is called when a content panel has been clicked on by its creator.
+			setFrameContents(new MainPage(new EditContent(Model.getContentOfInterest()))); //editing a content set by the event thrower. This window is called when a content panel has been clicked on by its creator.
 			break;
 		case "CREATE GROUP":
 			setFrameContents(new MainPage(new NewGroup())); //new group creation menu

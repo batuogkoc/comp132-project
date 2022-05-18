@@ -25,13 +25,20 @@ import java.util.Iterator;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 
+/**
+ * GUI panel that allows user to edit a content.
+ * @author batu
+ *
+ */
 public class EditContent extends JPanel {
 	private JTextField txtTitlefield;
-	private JPanel imagePanel;
-	private String picturePath = "";
-	private JFileChooser fileChooser;
+	private JPanel imagePanel; //panel that holds the picture
+	private String picturePath = ""; //path to picture. "" means no picture
+	private JFileChooser fileChooser; //filechooser is a filed because it retains the last opened directory this way.
+	
 	/**
-	 * Create the panel.
+	 * Create the GUI that allows the user to edit a profile.
+	 * @param content content that will be edited
 	 */
 	public EditContent(Content content) {
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -113,11 +120,14 @@ public class EditContent extends JPanel {
 		gbc_btnDone.gridy = 2;
 		add(btnDone, gbc_btnDone);
 		
-		picturePath = content.getImagePath();
+		picturePath = content.getImagePath(); //get the current path to the image from the content
+		//set the relevant fields with the data from the content being edited.
 		txtpnTextfield.setText(content.getText());
 		txtTitlefield.setText(content.getTitle());
-		displayPicture(picturePath);
-		fileChooser = new JFileChooser(picturePath);
+		displayPicture(picturePath); //display current picture
+		fileChooser = new JFileChooser(picturePath); //initialise the fileChooser
+		
+		//change picture button event. Updates the image path
 		btnChangePicture.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int result = fileChooser.showOpenDialog(null);
@@ -125,46 +135,55 @@ public class EditContent extends JPanel {
 					picturePath = fileChooser.getSelectedFile().getAbsolutePath();
 				}
 				else {
-					picturePath = "";
+					picturePath = "";//cancelling file choose sets the image as none
 				}
-				displayPicture(picturePath);
+				displayPicture(picturePath); //display new image
 			}
 		});
+		
+		//update the content with the new values of all the fields.
 		btnDone.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Save changes?", "Saving Changes", JOptionPane.YES_NO_OPTION);
+				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Save changes?", "Saving Changes", JOptionPane.YES_NO_OPTION);//confirm if the changes want to be kept
 				if(r == JOptionPane.YES_OPTION) {
-					content.setImagePath(picturePath);
-					content.setText(txtpnTextfield.getText());
-					Controller.sendEvent("HOME PAGE");
+					content.setImagePath(picturePath);//update image path
+					content.setText(txtpnTextfield.getText());//update text of content
+					Controller.sendEvent("HOME PAGE");//take user to the homePage
 				}
 
 			}
 		});
+		
+		//Cancel and exit the edit menu
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Quit without saving?", "Cancel Changes", JOptionPane.YES_NO_OPTION);
+				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Quit without saving?", "Cancel Changes", JOptionPane.YES_NO_OPTION);//confirm if user wants to exit
 				if(r == JOptionPane.YES_OPTION)
-					Controller.sendEvent("HOME PAGE");
+					Controller.sendEvent("HOME PAGE");//take user to the homePage
 			}
 		});
+		
+		//Delete the content
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Delete content?", "Deleting content", JOptionPane.YES_NO_OPTION);
+				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Delete content?", "Deleting content", JOptionPane.YES_NO_OPTION);//confirm if the user wants to delete the content
 				if(r == JOptionPane.YES_OPTION) {
-					content.delete();
-					Controller.sendEvent("HOME PAGE");
+					content.delete();//delete content
+					Controller.sendEvent("HOME PAGE");//take user to the homePage
 				}				
 			}
 		});
 	}
-	
+	/**
+	 * adds the picture at the picturePath to the relevant panel (imagePanel)
+	 * @param picturePath path to picture
+	 */
 	private void displayPicture(String picturePath) {
 		imagePanel.removeAll();
 		if(picturePath == "")
-			imagePanel.add(new JLabel("No picture"));
+			imagePanel.add(new JLabel("No picture"));//if no picture is selected, show a label that indicates that no picture is selected
 		else
-			imagePanel.add(new ResizableImage(new ImageIcon(picturePath)));
+			imagePanel.add(new ResizableImage(new ImageIcon(picturePath)));//add a resizableImage object to the relevant panel
 		imagePanel.validate();
 		imagePanel.repaint();
 	}

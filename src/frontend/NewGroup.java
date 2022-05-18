@@ -19,12 +19,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import backend.*;
+
+/**
+ * new group creation page for premium users.
+ * @author batu
+ *
+ */
 public class NewGroup extends JPanel {
 	private JTextField txtNamefield;
 	private JTextField txtCountryfield;
 
 	/**
-	 * Create the panel.
+	 * generate the panel that provides the functionality that allows a user to create a new group
 	 */
 	public NewGroup() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -106,6 +112,7 @@ public class NewGroup extends JPanel {
 		gbc_btnCreateGroup.gridy = 3;
 		add(btnCreateGroup, gbc_btnCreateGroup);
 		
+		//clear all data input fields
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				txtNamefield.setText("");
@@ -114,6 +121,7 @@ public class NewGroup extends JPanel {
 			}
 		});
 		
+		//Cancel the creation of the group and take the user to their profile page
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Model.setUserOfInterest(Model.getCurrentUser());
@@ -121,21 +129,22 @@ public class NewGroup extends JPanel {
 			}
 		});
 		
+		//validate the fields, prompt user if they are sure and create the new group
 		btnCreateGroup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					int r = JOptionPane.showConfirmDialog(View.getFrame(), "Create group?", "Creating group", JOptionPane.YES_NO_OPTION);
+					int r = JOptionPane.showConfirmDialog(View.getFrame(), "Create group?", "Creating group", JOptionPane.YES_NO_OPTION); //prompt user if they are sure
 					if(r == JOptionPane.YES_OPTION) {
 						Group group = new Group(Model.getCurrentUser(), txtNamefield.getText(), txtCountryfield.getText());
 						for(String hobby : txtpnHobbiesfield.getText().split("\\r?\\n")) {
-							group.addHobby(hobby);
+							group.addHobby(hobby);//add every line in the hobbies field as a different hobby
 						}
-						Model.setGroupOfInterest(group);
+						Model.setGroupOfInterest(group); //display the new group's page
 						Controller.sendEvent("GROUP");
 					}
 				}
 				catch(IllegalArgumentException e){
-					JOptionPane.showConfirmDialog(View.getFrame(), e.getMessage(), "Error", JOptionPane.DEFAULT_OPTION);
+					JOptionPane.showConfirmDialog(View.getFrame(), e.getMessage(), "Error", JOptionPane.DEFAULT_OPTION);//warn the users if there is an invalid entry in the fields.
 				}
 			}
 		});

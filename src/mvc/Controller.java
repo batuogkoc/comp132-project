@@ -17,49 +17,45 @@ public class Controller {
 	 */
 	public static void sendEvent(String eventCode) {
 		switch (eventCode) {
-			case "LOGIN":
-				Model.setCurrentUser(null);
-				View.setFrameContents(new Login());
+			case "LOGIN": //displays login page
+				Model.setCurrentUser(null); //set the currently logged in user to null
+				View.setFrameContents(new Login()); //show the login page
 				break;
 			
-			case "HOME PAGE":
-				View.displayView("HOME PAGE");
+			case "HOME PAGE": //displays home page
+				View.displayView("HOME PAGE"); //display home page
 				break;
 				
-			case "ADD CONTENT MENU":
+			case "ADD CONTENT MENU":  //displays new content page
 				View.displayView("ADD CONTENT MENU");
 				break;
 				
-			case "PROFILE PAGE":
+			case "PROFILE PAGE":  //displays the profile page of the currently logged in user
 				Model.setUserOfInterest(Model.getCurrentUser());
 				View.displayView("USER PROFILE");
 				break;
 			
-			case "NEW ACCOUNT":
-				View.displayView(eventCode);
-				break;
-			
-			case "GROUPS PAGE":
-				View.displayView("GROUPS PAGE");
+			case "NEW ACCOUNT": //displays new account generation page
+				View.displayView("NEW ACCOUNT");
 				break;
 				
-			case "OTHER USER":
+			case "OTHER USER": //displays the profile of a user
 				View.displayView("USER PROFILE");
 				break;
 				
-			case "GROUP":
+			case "GROUP": //displays a group's page
 				View.displayView("GROUP");
 				break;
 				
-			case "CONTENT EDIT":
+			case "CONTENT EDIT": //displays the edit menu for a content
 				View.displayView("CONTENT EDIT");
 				break;
 				
-			case "CREATE GROUP":
+			case "CREATE GROUP": //displays the new group generation page
 				View.displayView("CREATE GROUP");
 				break;
 			default:
-				System.out.println("Controller: Unknown event code: " +eventCode);
+				System.err.println("Controller: Unknown event code: " +eventCode); //print an error if the event code is unknown
 				break;
 		}
 	}
