@@ -292,6 +292,7 @@ public class ProfilePage extends JPanel {
 		}
 		else if (viewingUser.getFollowedUsers().contains(viewedUser)) {
 			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26455931790925");
+			setDynamicPanelContents(new ContentsPanel(viewedUser.getContents()));
 		}
 		else {
 			((CardLayout)controlPanel.getLayout()).show(controlPanel, "name_26836584180790");
@@ -363,6 +364,43 @@ public class ProfilePage extends JPanel {
 				setDynamicPanelContents(new GroupsPanel(viewingUser.recommendGroups()));
 			}
 		});
+		
+		btnFollow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Follow user?", "Following user", JOptionPane.YES_NO_OPTION);
+				if(r == JOptionPane.YES_OPTION) {
+					viewingUser.followUser(viewedUser);
+					Model.setUserOfInterest(viewedUser);
+					Controller.sendEvent("OTHER USER");
+				}
+			}
+		});
+		btnUnfollow_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int r = JOptionPane.showConfirmDialog(View.getFrame(), "Unfollow user?", "Unfollowing user", JOptionPane.YES_NO_OPTION);
+				if(r == JOptionPane.YES_OPTION) {
+					viewingUser.unfollowUser(viewedUser);
+					Model.setUserOfInterest(viewedUser);
+					Controller.sendEvent("OTHER USER");
+				}
+			}
+		});
+		btnContents_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setDynamicPanelContents(new ContentsPanel(viewedUser.getContents()));
+			}
+		});
+		btnFriends_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setDynamicPanelContents(new UsersPanel(viewedUser.getFollowedUsers()));
+
+			}
+		});
+		btnGroups_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setDynamicPanelContents(new GroupsPanel(viewedUser.getJoinedGroups()));
+			}
+		});		
 	}
 	
 	private void setDynamicPanelContents(JComponent component) {
