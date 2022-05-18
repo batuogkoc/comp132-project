@@ -1,5 +1,6 @@
 package frontend;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.*;
@@ -57,5 +58,6 @@ public class ContentPanel extends JPanel{
 		catch(Exception e){
 			System.out.println(e);
 		}
+		setBorder(BorderFactory.createLineBorder(Color.black));
 	}
 }

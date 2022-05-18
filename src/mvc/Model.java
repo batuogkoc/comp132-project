@@ -2,11 +2,18 @@ package mvc;
 
 import backend.*;
 
+/**
+ * holds a part representation of the model state. The rest of the state is stored within static variables in the backend package
+ * stores the users, contents, groups to be displayed alongside the currently logged in user. 
+ * @author batu
+ *
+ */
 public class Model {
-	private static User currentUser;
-	private static User userOfInterest;
-	private static Group groupOfInterest;
-	private static Content contentOfInterest;
+	private static User currentUser; //logged in user
+	private static User userOfInterest; //user to be displayed
+	private static Group groupOfInterest; //group to be displayed
+	private static Content contentOfInterest; //content to be displayed
+	
 	public static Content getContentOfInterest() {
 		return contentOfInterest;
 	}

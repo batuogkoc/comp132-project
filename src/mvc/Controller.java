@@ -1,12 +1,20 @@
 package mvc;
 
-import java.awt.GridLayout;
+import backend.Content;
+import backend.Group;
+import backend.User;
+import frontend.Login;
 
-import javax.swing.*;
-import backend.*;
-import frontend.*;
-
+/**
+ * controller class for the mvc structure. Manipulates View and Model to give functionality to the program.
+ * Mostly involved in switching between windows
+ * 
+ */
 public class Controller {
+	/**
+	 * receives events from frontend components, takes neccecary actions such as changing the view accordingly or updating the model.
+	 * @param eventCode : what the executed event is
+	 */
 	public static void sendEvent(String eventCode) {
 		switch (eventCode) {
 			case "LOGIN":
@@ -55,11 +63,18 @@ public class Controller {
 				break;
 		}
 	}
+	
+	/**
+	 * initialise the model and start the program from the login page
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		__initialiseModel();
 		sendEvent("LOGIN");
 	}
-	
+	/**
+	 * create some users, contents, groups for demonstration purposes
+	 */
 	private static void __initialiseModel() {
 		User batu = new User("a", "a", "Batu Orhun", "Gunduz", 18, "batuorhungunduz@gmail.com", true, "Turkey");
 		batu.addHobby("death");
@@ -71,7 +86,7 @@ public class Controller {
 		
 		batu.setProfilePicturePath(".//images//cat.png");
 		new Content(batu, batu, "First content", "Hello world!",".//images//cat.png");
-		new Content(batu, batu, "Second content", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", ".//images//defaultProfilePicture.png");
+		new Content(batu, batu, "Second content", "second c", ".//images//defaultProfilePicture.png");
 		new Content(u2, u2, "Red army is strong", "lolsies", ".//images//defaultProfilePicture.png");
 		Group g1 = new Group(batu, "dictators", "germany");
 		g1.addHobby("Genocide");
