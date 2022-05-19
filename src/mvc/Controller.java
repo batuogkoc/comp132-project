@@ -122,37 +122,5 @@ public class Controller {
 			for(int j = 0; j<3; j++)
 				user.followUser(users.get(sr.nextInt(users.size())));
 		}
-//		u1.setProfilePicturePath(".//images//1.jpg");
-//		u2.setProfilePicturePath(".//images//2.jpg");
-//		u3.setProfilePicturePath(".//images//3.jpg");
-//		u4.setProfilePicturePath(".//images//4.jpg");
-//		u5.setProfilePicturePath(".//images//5.jpg");
-//		u6.setProfilePicturePath(".//images//6.jpg");
-//		u7.setProfilePicturePath(".//images//7.jpg");
-//		u8.setProfilePicturePath(".//images//8.jpg");
-//		u9.setProfilePicturePath(".//images//9.jpg");
-//		u10.setProfilePicturePath(".//images//10.jpg");
-//		u11.setProfilePicturePath(".//images//11.jpg");
-		
-//		User u1 = new User("b", "b", "Emperor", "Hirohito", 40, "greateasterncoprosperitysphere@gmail.com", false, "Japan");
-//		u1.addHobby("death");
-//		User u2 = new User("c", "c", "Joseph", "Stalin", 40, "revolution@gmail.com", true, "Soviet Union");
-//		batu.followUser(u1);
-//		batu.followUser(u2);
-//		
-//		batu.setProfilePicturePath(".//images//cat.png");
-//		new Content(batu, batu, "First content", "Hello world!",".//images//cat.png");
-//		new Content(batu, batu, "Second content", "second c", ".//images//defaultProfilePicture.png");
-//		new Content(u2, u2, "Red army is strong", "lolsies", ".//images//defaultProfilePicture.png");
-//		Group g1 = new Group(batu, "dictators", "germany");
-//		g1.addHobby("Genocide");
-//		g1.addHobby("Warmongering");
-//		new Content(g1, u1, "I will bomb pearl harbour", "Lol", ".//images//pearl-harbor.jpg");
-//		u1.joinGroup(g1);
-//		u2.joinGroup(g1);
 	}
-	
-
-	
-	
 }

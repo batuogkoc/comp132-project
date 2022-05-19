@@ -95,12 +95,15 @@ public class Group implements ContentContainer, HobbyContainer{
 	 * @return true if success, false if not
 	 */
 	public boolean leave(User member) {
+		ArrayList<Content> contentsToRemove = new ArrayList<Content>();
 		for (Content content : contents) {
 			if(content.getAuthor() == member) {
-				removeContent(content);
+				contentsToRemove.add(content);
 			}
 		}
-		System.out.println(contents);
+		for (Content content : contentsToRemove) {
+			removeContent(content);
+		}
 		return this.members.remove(member);
 	}
 	/**

@@ -177,9 +177,10 @@ public class User implements Comparable<User>, ContentContainer, HobbyContainer{
 		for(Group group : joinedGroups) {
 			ret.addAll(group.getContents());
 		}
+		HashSet<Content> ret2 = new HashSet<>();
 		for (Content content : ret) {
-			if(content.getAuthor() == this) {
-				ret.remove(content);
+			if(content.getAuthor() != this) {
+				ret2.add(content);
 			}
 		}
 		return ret;
