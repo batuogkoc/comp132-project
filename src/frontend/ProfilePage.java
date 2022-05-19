@@ -330,7 +330,6 @@ public class ProfilePage extends JPanel {
 		surnameField.setText(viewedUser.getSurname()); //set the surname field
 		nicknameField.setText(viewedUser.getNickname());//set the nickname field
 		countryfield.setText(viewedUser.getCountry()); //set the country field
-		System.out.println(viewedUser.getHobbies());
 		setHobbiesPanelContents(new HobbiesPanel(viewedUser.getHobbies())); //show the hobbies
 		accountTypeCombo.setSelectedIndex(viewedUser.isPremium()?1:0);//set the account type field
 			
@@ -380,7 +379,6 @@ public class ProfilePage extends JPanel {
 						s = s+string+"\n";
 					}
 					hobbiesEditPane = new JTextPane();
-					System.out.println(s);
 					hobbiesEditPane.setText(s);
 					setHobbiesPanelContents(hobbiesEditPane);
 					//another click of the button will save the changes now
@@ -399,7 +397,6 @@ public class ProfilePage extends JPanel {
 						if(!hobby.equals(""))
 							hobbies.add(hobby);
 					}
-					System.out.println(hobbies);
 					viewedUser.setHobbies(hobbies);
 
 					Controller.sendEvent("PROFILE PAGE");//redraw the page after changes occur

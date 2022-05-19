@@ -53,7 +53,7 @@ public class ContentPanel extends JPanel{
 		//try to add picture
 		try {
 			ImageIcon image = new ImageIcon(content.getImagePath());
-			float aspectRatio = image.getIconWidth()/image.getIconHeight();
+			float aspectRatio = (float)image.getIconWidth()/(float)image.getIconHeight();
 			JLabel imageLabel = new JLabel(new ImageIcon(image.getImage().getScaledInstance(300, 300, Image.SCALE_DEFAULT)));
 			add(imageLabel);
 			imageLabel.addMouseListener(ma);

@@ -16,7 +16,7 @@ public class ResizableImage extends JLabel{
 	 * @param image image to be displayed
 	 */
 	public ResizableImage(ImageIcon image) {
-		float imageAspectRatio = image.getIconWidth()/image.getIconHeight(); //aspect ratio of original image
+		float imageAspectRatio = (float)image.getIconWidth()/(float)image.getIconHeight(); //aspect ratio of original image
 		setHorizontalAlignment(JLabel.CENTER);
 		//whenever the object is resized, redraw the image
 		addComponentListener(new ComponentAdapter() {
