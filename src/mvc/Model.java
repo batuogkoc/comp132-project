@@ -3,8 +3,9 @@ package mvc;
 import backend.*;
 
 /**
- * holds a part representation of the model state. The rest of the state is stored within static variables in the backend package
- * stores the users, contents, groups to be displayed alongside the currently logged in user. 
+ * Holds a partial representation of the model state. 
+ * The rest of the state is stored within static variables in the backend package.
+ * Stores the users, contents, groups to be displayed alongside the currently logged in user. 
  * @author batu
  *
  */

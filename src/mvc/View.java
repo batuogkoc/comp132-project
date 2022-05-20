@@ -46,17 +46,19 @@ public class View {
 			setFrameContents(new MainPage(new HomePage(Model.getCurrentUser()))); //Home page the user sees. has contents, and a search bar
 			break;
 		case "ADD CONTENT MENU":
-			setFrameContents(new MainPage(new CreateContent(Model.getCurrentUser()))); //new coıntent creation menu
+			setFrameContents(new MainPage(new CreateContent(Model.getCurrentUser()))); //new content creation menu
 			break;
 		case "USER PROFILE":
-			setFrameContents(new MainPage(new ProfilePage(Model.getCurrentUser(), Model.getUserOfInterest()))); //viewing of a user's profile. Can be yours, an unfollowed user and a user you follow
+			//viewing of a user's profile. Can be yours, an unfollowed user and a user you follow
+			setFrameContents(new MainPage(new ProfilePage(Model.getCurrentUser(), Model.getUserOfInterest()))); 
 			break;
 		case "NEW ACCOUNT":
 			setFrameContents(new NewUser()); //new user generation page
 			break;
 			
 		case "GROUP":
-			setFrameContents(new MainPage(new GroupPage(Model.getGroupOfInterest(), Model.getCurrentUser()))); //viewing a group of interest set by the event thrower. It can be a group that you are a member of, creator of, or a group you aren't a part of.
+			 //viewing a group of interest set by the event thrower. It can be a group that you are a member of, creator of, or a group you aren't a part of
+			setFrameContents(new MainPage(new GroupPage(Model.getGroupOfInterest(), Model.getCurrentUser())));
 			break;
 			
 		case "CONTENT EDIT":

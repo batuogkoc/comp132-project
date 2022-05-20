@@ -18,10 +18,13 @@ import javax.swing.JButton;
 import java.awt.CardLayout;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 
 import backend.*;
 import mvc.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.TreeSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
@@ -39,6 +42,9 @@ public class ProfilePage extends JPanel {
 	private JTextField countryfield;
 	private JPanel hobbiesPanel;
 	private JTextPane hobbiesEditPane;
+	private String profilePicturePath = "";
+	private JPanel imagePanel;
+	private JFileChooser fileChooser;
 
 	/**
 	 * generate the GUI 
@@ -53,7 +59,7 @@ public class ProfilePage extends JPanel {
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 1.0};
 		setLayout(gridBagLayout);
 		
-		JPanel imagePanel = new JPanel();
+		imagePanel = new JPanel();
 		GridBagConstraints gbc_imagePanel = new GridBagConstraints();
 		gbc_imagePanel.gridheight = 2;
 		gbc_imagePanel.insets = new Insets(0, 0, 5, 5);
@@ -324,8 +330,10 @@ public class ProfilePage extends JPanel {
 		add(dynamicPanel, gbc_dynamicPanel);
 		dynamicPanel.setLayout(new GridLayout(1, 1));
 		
+		fileChooser = new JFileChooser(".");
 		//initialise the parts of the page that are constant regardless of who is viewing them
-		imagePanel.add(new ResizableImage(new ImageIcon(viewedUser.getProfilePicturePath()))); //add the profile picture to the relevant panel
+		profilePicturePath = viewedUser.getProfilePicturePath();
+		displayProfilePicture(profilePicturePath); //display profile picture
 		nameField.setText(viewedUser.getName()); //set the user name field
 		surnameField.setText(viewedUser.getSurname()); //set the surname field
 		nicknameField.setText(viewedUser.getNickname());//set the nickname field
@@ -398,6 +406,7 @@ public class ProfilePage extends JPanel {
 							hobbies.add(hobby);
 					}
 					viewedUser.setHobbies(hobbies);
+					viewedUser.setProfilePicturePath(profilePicturePath);
 
 					Controller.sendEvent("PROFILE PAGE");//redraw the page after changes occur
 				}
@@ -498,6 +507,20 @@ public class ProfilePage extends JPanel {
 				Controller.sendEvent("CREATE GROUP");
 			}
 		});
+		imagePanel.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if(btnEdit.getText().equals("Done")){
+					int result = fileChooser.showOpenDialog(null);
+					if(result == JFileChooser.APPROVE_OPTION) {
+						profilePicturePath = fileChooser.getSelectedFile().getAbsolutePath();
+					}
+					else {
+						profilePicturePath = "";
+					}
+					displayProfilePicture(profilePicturePath);
+				}
+			}
+		});
 	}
 	
 	/**
@@ -521,6 +544,19 @@ public class ProfilePage extends JPanel {
 		hobbiesPanel.add(component);
 		hobbiesPanel.validate();
 		hobbiesPanel.repaint();
+	}
+	
+	/**
+	 * adds the picture at the profilePicturePath to the relevant panel (imagePanel)
+	 * @param picturePath path to picture
+	 */
+	private void displayProfilePicture(String profilePicturePath) {
+		imagePanel.removeAll();
+		if(profilePicturePath == "")
+			profilePicturePath = User.getDefaultProfilePicturePath();//if profilePicturePath is "" display default profile picture
+		imagePanel.add(new ResizableImage(new ImageIcon(profilePicturePath))); //add the resizable image into the imagePanel
+		imagePanel.validate();
+		imagePanel.repaint(); //redraw the relevant panel
 	}
 
 }
